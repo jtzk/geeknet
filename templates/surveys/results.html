@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<h1>{{ survey.title }}</h1>
+
+<ul>
+    {% for question in survey.question_set.all %}
+        <h2>{{ question.question }}</h2>
+        {% for choice in question.choice_set.all %}
+            <p>{{ choice.choice }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }} ({{ choice.percentage }} %)</p>
+        {% endfor %}
+    {% endfor %}
+</ul>
+
+<a href="/surveys/">Do another survey</a>
+</body>
+</html>

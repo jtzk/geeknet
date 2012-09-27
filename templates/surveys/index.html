@@ -1,0 +1,8 @@
+{% if latest_survey_list %}
+    <h1>Surveys</h1>
+    {% for survey in latest_survey_list %}
+        <p>{{ survey.id }}. <a href="/surveys/{{ survey.id }}/">{{ survey.title }}</a></p>
+    {% endfor %}
+{% else %}
+    <p>No surveys are available.</p>
+{% endif %}
