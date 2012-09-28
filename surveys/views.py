@@ -12,9 +12,26 @@ def detail(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
     return render_to_response('surveys/detail.html', {'survey': s}, context_instance=RequestContext(request))
 
+def list(request, survey_id):
+    s = get_object_or_404(Survey, pk=survey_id)
+    return render_to_response('surveys/list.html', {'survey': s})
+
 def question(request, survey_id, question_id):
     s = get_object_or_404(Survey, pk=survey_id)
     q = s.question_set.get(pk=question_id)
+
+    prev = s.question_set.order_by('-id').filter(id__lt=question_id)[0:1]
+    if prev.count():
+        q.prev = prev[0]
+    else:
+        q.prev = 0
+
+    next = s.question_set.filter(id__gt=question_id)[0:1]
+    if next.count():
+        q.next = next[0]
+    else:
+        q.next = 0
+
     return render_to_response('surveys/question.html', {'survey': s, 'question': q}, context_instance=RequestContext(request))
 
 def results(request, survey_id):

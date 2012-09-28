@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>{{ survey.title }}</h1>
-
+    <p><a href="/surveys/list/{{ survey.id }}">See question list</a></p>
     <form action="/surveys/{{ survey.id }}/vote/" method="post">
         {% csrf_token %}
         {% for question in survey.question_set.all %}
