@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create New Survey</title>
+    <style type="text/css">
+        * { font-family:Verdana }
+        div.form { padding:30px }
+        div.form div { padding-bottom:20px }
+        p.field, p.label { display:table-cell }
+        p.label { font-weight:bold; font-size:12px; width:150px }
+        p.field input { width:300px; font:12px Tahoma; border:1px solid #999; padding:4px }
+    </style>
+</head>
+<body>
+    <h1>Create Survey</h1>
+    <div class="form">
+        <form action="" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <p class="label">{{ field.label_tag }}</p><p class="field">{{ field }}</p>
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+            <p><input type="submit" value="Create Survey" /></p>
+        </form>
+    </div>
+</body>
+</html>

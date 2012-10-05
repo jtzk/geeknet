@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Survey Results - {{ survey.title }}</title>
+    <style type="text/css">
+        * { font-family:Verdana, Tahoma; font-size:12px }
+        h2 { margin-top:30px }
+        div.question { margin:0 15px }
+        div.question p { margin-bottom:5px }
+    </style>
 </head>
 <body>
 <h1>{{ survey.title }}</h1>
 
 <ul>
+        <h2>Statistics</h2>
+        <p>Number of questions: <strong>{{ statistics.numberQuestions }}</strong></p>
+        <p>Total votes: <strong>{{ statistics.totalVotes }}</strong></p>
     {% for question in survey.question_set.all %}
         <h2>{{ question.question }}</h2>
         {% for choice in question.choice_set.all %}
-            <p>{{ choice.choice }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }} ({{ choice.percentage }} %)</p>
+            <div class="question"><p style="width:300px">{{ choice.choice }}<span style="float:right;"><strong>{{ choice.votes }} vote{{ choice.votes|pluralize }}</strong></span></p><div style="background:#999; width:300px; padding:0"><p style="padding:2px 3px; text-align:right; background:#333; color:#fff; font:10px Verdana; margin:0; width:{{ choice.percentage }}%">{{ choice.percentage }}%</p></div></div>
         {% endfor %}
     {% endfor %}
 </ul>
 
-<a href="/surveys/">Do another survey</a>
+<a href="{% url surveys.views.index %}">Do another survey</a>
 </body>
 </html>

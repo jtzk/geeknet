@@ -9,6 +9,18 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Host for sending e-mail.
+EMAIL_HOST = 'mail.hahageek.com'
+
+# Port for sending e-mail.
+EMAIL_PORT = 26
+
+# Optional SMTP authentication information for EMAIL_HOST.
+EMAIL_HOST_USER = 'accounts@hahageek.com'
+EMAIL_HOST_PASSWORD = 'yandao2012'
+EMAIL_USE_TLS = False
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.

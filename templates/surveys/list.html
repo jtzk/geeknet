@@ -8,7 +8,7 @@
 
     <ul style="list-style-type: none; padding: 0">
         {% for question in survey.question_set.all %}
-            <li><a href="/surveys/{{ survey.id }}/question/{{ question.id }}">{{ question.question }}</a></li>
+            <li><a href="{% url surveys.views.question survey_id=survey.id question_id=question.id %}">{{ question.question }}</a></li>
         {% endfor %}
     </ul>
 </body>

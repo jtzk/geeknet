@@ -18,10 +18,10 @@ class SurveyAdmin(admin.ModelAdmin):
     list_display = ('title', 'information', 'pub_date')
 
 class QuestionAdmin(admin.ModelAdmin):
-    fields = ['survey', 'question', 'instruction']
+    fields = ['survey', 'question', 'instruction', 'type']
     inlines = [ChoiceInline]
 
-    list_display = ('survey', 'question', 'instruction')
+    list_display = ('survey', 'question', 'instruction', 'type')
 
 admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Question, QuestionAdmin)
