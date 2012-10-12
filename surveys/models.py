@@ -84,3 +84,7 @@ class Surveyee(models.Model):
     survey = models.ForeignKey(Survey)
     userid = models.IntegerField(default=0)
 
+
+
+
+
