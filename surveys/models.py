@@ -1,3 +1,4 @@
+from collections import defaultdict
 import datetime
 from django.db import models
 from django.db.models import Sum
@@ -78,3 +79,7 @@ class Choice(models.Model):
         else:
             percent = 0
         return percent
+
+class Surveyee(models.Model):
+    survey = models.ForeignKey(Survey)
+    userid = models.IntegerField(default=0)
