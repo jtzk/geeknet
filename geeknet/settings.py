@@ -1,4 +1,4 @@
-# Django settings for testproject project.
+# Django settings for project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -10,13 +10,8 @@ ADMINS = (
 MANAGERS = ADMINS
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# Host for sending e-mail.
 EMAIL_HOST = 'mail.hahageek.com'
-
-# Port for sending e-mail.
 EMAIL_PORT = 26
-
-# Optional SMTP authentication information for EMAIL_HOST.
 EMAIL_HOST_USER = 'accounts@hahageek.com'
 EMAIL_HOST_PASSWORD = 'yandao2012'
 EMAIL_USE_TLS = False
@@ -24,9 +19,9 @@ EMAIL_USE_TLS = False
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'surveydb',                      # Or path to database file if using sqlite3.
+        'NAME': 'geeknet',                      # Or path to database file if using sqlite3.
         'USER': 'postgres',                      # Not used with sqlite3.
-        'PASSWORD': 'admin',                  # Not used with sqlite3.
+        'PASSWORD': '123',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -109,16 +104,16 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'testproject.urls'
+ROOT_URLCONF = 'geeknet.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'testproject.wsgi.application'
+WSGI_APPLICATION = 'geeknet.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "C:/Documents and Settings/Jarryd/Desktop/djangoTest/testproject/templates"
+    "C:/Documents and Settings/etch/Desktop/geeknet/templates"
 )
 
 INSTALLED_APPS = (
@@ -128,7 +123,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
