@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a9f32d4-1b57-4cf5-a2d3-75b423abe100" name="Default" comment="View surveys&#10;View survey -&gt; All questions&#10;View survey -&gt; Individual question&#10;Do survey -&gt; All questions&#10;View survey results">
-      <change type="DELETED" beforePath="C:\Users\etch\Desktop\geeknet\.idea\testproject.iml" afterPath="" />
-      <change type="MOVED" beforePath="C:\Users\etch\Desktop\geeknet\testproject\__init__.py" afterPath="$PROJECT_DIR$/geeknet/__init__.py" />
-      <change type="MOVED" beforePath="C:\Users\etch\Desktop\geeknet\testproject\settings.py" afterPath="$PROJECT_DIR$/geeknet/settings.py" />
-      <change type="MOVED" beforePath="C:\Users\etch\Desktop\geeknet\testproject\urls.py" afterPath="$PROJECT_DIR$/geeknet/urls.py" />
-      <change type="MOVED" beforePath="C:\Users\etch\Desktop\geeknet\testproject\wsgi.py" afterPath="$PROJECT_DIR$/geeknet/wsgi.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/geeknet.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manage.py" afterPath="$PROJECT_DIR$/manage.py" />
     </list>
     <ignored path="testproject.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -334,7 +327,11 @@
       <created>1348776768280</created>
       <updated>1348776768280</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="View surveys&#10;View survey -&gt; All questions&#10;View survey -&gt; Individual question&#10;Do survey -&gt; All questions&#10;View survey results">
+      <created>1350378112847</created>
+      <updated>1350378112847</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -361,21 +358,21 @@
     <frame x="-8" y="-8" width="1164" height="696" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3283582" sideWeight="0.49637023" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3283582" sideWeight="0.49274048" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3283582" sideWeight="0.49092558" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27949184" sideWeight="0.11940298" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27949184" sideWeight="0.5391791" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39941406" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.36914062" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3283582" sideWeight="0.49727768" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3283582" sideWeight="0.5009074" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3283582" sideWeight="0.49637023" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32910156" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32910156" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -482,7 +479,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/geeknet/wsgi.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="56" selection-start="732" selection-end="732" vertical-scroll-proportion="0.43444228" />
+        <state line="17" column="56" selection-start="732" selection-end="732" vertical-scroll-proportion="0.43444228">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/surveys/admin.py">
@@ -492,17 +491,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/geeknet/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="43" selection-start="4254" selection-end="4254" vertical-scroll-proportion="0.41925466" />
+        <state line="115" column="43" selection-start="4254" selection-end="4254" vertical-scroll-proportion="0.41925466">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/manage.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="60" selection-start="131" selection-end="131" vertical-scroll-proportion="0.16634052" />
+        <state line="5" column="60" selection-start="131" selection-end="131" vertical-scroll-proportion="0.16634052">
+          <folding>
+            <element signature="e#22#31#0" expanded="true" />
+          </folding>
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/geeknet/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="1" selection-start="322" selection-end="322" vertical-scroll-proportion="0.33268103" />
+        <state line="10" column="1" selection-start="322" selection-end="322" vertical-scroll-proportion="0.33268103">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/surveys/urls.py">
