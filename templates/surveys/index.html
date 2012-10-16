@@ -1,9 +1,10 @@
+{% load humanize %}
 <h1>Surveys</h1>
 <p><a href="{% url surveys.views.create %}">Create a new survey</a></p>
 <h2>Newest surveys:</h2>
 {% if latest_survey_list %}
     {% for survey in latest_survey_list %}
-        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> <strong>created {{ survey.pub_date }}</strong></p>
+        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> created <strong>{{ survey.pub_date|naturaltime }}</strong> by <strong>{{ user.get_full_name }}</strong></p>
     {% endfor %}
 {% else %}
     <p>No surveys are available.</p>
@@ -27,6 +28,6 @@
 <h2>Unpublished surveys:</h2>
 {% if active_survey_list %}
     {% for survey in active_survey_list %}
-        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a></p>
+        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> created <strong>{{ survey.pub_date|naturaltime }}</strong> by <strong>{{ user.get_full_name }}</strong></p>
     {% endfor %}
 {% endif %}

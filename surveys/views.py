@@ -11,7 +11,7 @@ def index(request):
     popular_survey_list = Survey.objects.filter(status=Survey.STATUS_PUBLISHED).annotate(tvotes=Sum('question__choice__votes')).order_by('-tvotes').filter(tvotes__gt=1)[:5]
     all_survey_list = Survey.objects.filter(status=Survey.STATUS_PUBLISHED).order_by('id')
     active_survey_list = Survey.objects.filter(status=Survey.STATUS_ACTIVE).order_by('id')
-    return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list})
+    return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list}, RequestContext(request))
 
 def detail(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
@@ -39,7 +39,10 @@ def question(request, survey_id, question_id):
 def results(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
     statistics = s.results()
-    return render_to_response('surveys/results.html', {'survey': s, 'statistics': statistics})
+    if s.resultDisplay == s.RESULTS_PUBLIC or (s.resultDisplay == s.RESULTS_USER and request.user.is_authenticated()) or (s.resultDisplay == s.RESULTS_PRIVATE and request.user == s.owner):
+        return render_to_response('surveys/results/results.html', {'survey': s, 'statistics': statistics}, RequestContext(request))
+    else:
+        return render_to_response('surveys/results/error.html', {'survey': s,})
 
 def vote(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)

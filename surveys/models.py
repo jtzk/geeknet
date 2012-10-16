@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from django.contrib.auth.models import User
 from django.db.models import Sum
 
 class Survey(models.Model):
@@ -16,9 +17,22 @@ class Survey(models.Model):
         (STATUS_ENDED, 'Ended'),
         )
 
+    # results types
+    RESULTS_PUBLIC = 0
+    RESULTS_USER = 1
+    RESULTS_PRIVATE = 2
+
+    RESULTS_CHOICES = (
+        (RESULTS_PUBLIC, 'Public'),
+        (RESULTS_USER, 'User'),
+        (RESULTS_PRIVATE, 'Hidden')
+    )
+
     title = models.CharField(max_length=100)
     information = models.CharField(max_length=200)
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_ACTIVE)
+    resultDisplay = models.IntegerField(choices=RESULTS_CHOICES, default=RESULTS_PUBLIC)
+    owner = models.ForeignKey(User)
     pub_date = models.DateTimeField('Date published', auto_now_add=True)
 
     def __unicode__(self):
