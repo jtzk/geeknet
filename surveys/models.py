@@ -1,11 +1,24 @@
-from collections import defaultdict
 import datetime
 from django.db import models
 from django.db.models import Sum
 
 class Survey(models.Model):
+    # status types
+    STATUS_INACTIVE = 0
+    STATUS_ACTIVE = 1
+    STATUS_PUBLISHED = 2
+    STATUS_ENDED = 3
+
+    STATUS_CHOICES = (
+        (STATUS_INACTIVE, 'Inactive'),
+        (STATUS_ACTIVE, 'Active'),
+        (STATUS_PUBLISHED, 'Published'),
+        (STATUS_ENDED, 'Ended'),
+        )
+
     title = models.CharField(max_length=100)
     information = models.CharField(max_length=200)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_ACTIVE)
     pub_date = models.DateTimeField('Date published', auto_now_add=True)
 
     def __unicode__(self):
@@ -15,7 +28,7 @@ class Survey(models.Model):
         results = {"timesAttempted":0, "numberQuestions":0, "totalVotes":0,}
 
         results["numberQuestions"] = self.question_set.all().count
-        results["totalVotes"] += self.question_set.all().aggregate(tvotes=Sum('choice__votes'))['tvotes']
+        #results["totalVotes"] += self.question_set.all().aggregate(tvotes=Sum('choice__votes'))['tvotes']
 
         return results
 
@@ -31,7 +44,7 @@ class Question(models.Model):
         (TYPE_CHECKBOX, 'Checkbox'),
         (TYPE_TEXTBOX, 'Text Box'),
         (TYPE_TEXTAREA, 'Text Area'),
-    )
+        )
 
     survey = models.ForeignKey(Survey)
     question = models.CharField(max_length=200)
@@ -82,9 +95,10 @@ class Choice(models.Model):
 
 class Surveyee(models.Model):
     survey = models.ForeignKey(Survey)
-    userid = models.IntegerField(default=0)
 
+class Answer(models.Model):
+    question = models.ForeignKey(Question)
+    value = models.CharField(max_length=1024, blank=True)
 
-
-
-
+    def __unicode__(self):
+        return self.value

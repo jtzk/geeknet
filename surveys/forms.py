@@ -6,11 +6,12 @@ from surveys.models import Survey, Question
 class SurveyCreationForm(forms.ModelForm):
     class Meta:
         model = Survey
+        exclude = {'status',}
 
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         widgets = {
             'type': forms.RadioSelect(),
-        }
+            }
         exclude = ('survey',)

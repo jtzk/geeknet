@@ -4,28 +4,32 @@
     <title></title>
 </head>
 <body>
-    <h1>{{ survey.title }}</h1>
-    <p><a href="{% url surveys.views.edit survey_id=survey.id %}">Edit this survey</a></p>
-    <form action="{% url surveys.views.vote survey_id=survey.id %}" method="post">
-        {% csrf_token %}
-        {% if question %}
-            <h3>Question {{ question.number }}:</h3>
-            <p>{{ question.question }}</p>
+<h1>{{ survey.title }}</h1>
+<p><a href="{% url surveys.views.edit survey_id=survey.id %}">Edit this survey</a></p>
+<form action="{% url surveys.views.vote survey_id=survey.id %}" method="post">
+    {% csrf_token %}
+    {% if question %}
+        <h3>Question {{ question.number }}:</h3>
+        <p>{{ question.question }}</p>
+        {% if question.type == question.TYPE_RADIO or question.type == question.TYPE_CHECKBOX %}
             {% for choice in question.choice_set.all %}
-                <input type="{% if question.type == 1 %}radio{% elif question.type == 2 %}checkbox{% endif %}" name="question-{{ question.id }}" id="choice{{ choice.id }}" value="{{ choice.id }}" />
+                <input type="{% if question.type == question.TYPE_RADIO %}radio{% elif question.type == question.TYPE_CHECKBOX %}checkbox{% endif %}" name="question-{{ question.id }}" id="choice{{ choice.id }}" value="{{ choice.id }}" />
                 <label for="choice{{ choice.id }}">{{ choice.choice }}</label><br />
             {% endfor %}
-            {% if question.next %}<input type="hidden" name="nextquestion" value="{{ question.next.id }}" />{% endif %}
-            <input type="submit" value="Vote" />
-            {% if question.prev or question.next %}
-                <p>
+        {% elif question.type == question.TYPE_TEXTBOX %}
+            <input type="text" name="question-{{ question.id }}" value="" /><br />
+        {% endif %}
+        {% if question.next %}<input type="hidden" name="nextquestion" value="{{ question.next.id }}" />{% endif %}
+        <input type="submit" value="Vote" />
+        {% if question.prev or question.next %}
+            <p>
                 {% if question.prev %}<a href="{% url surveys.views.question survey_id=survey.id question_id=question.prev.id %}">previous</a>{% endif %}
                 {% if question.next %}<a href="{% url surveys.views.question survey_id=survey.id question_id=question.next.id %}">next</a>{% endif %}
-                </p>
-            {% endif %}
-        {% else %}
-            <p>There are no questions in this survey yet.</p>
+            </p>
         {% endif %}
-    </form>
+    {% else %}
+        <p>There are no questions in this survey yet.</p>
+    {% endif %}
+</form>
 </body>
 </html>

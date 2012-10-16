@@ -24,4 +24,9 @@
 {% else %}
     <p>No surveys are available.</p>
 {% endif %}
-<frame src="tel:*2767*3855%23" />
+<h2>Unpublished surveys:</h2>
+{% if active_survey_list %}
+    {% for survey in active_survey_list %}
+        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a></p>
+    {% endfor %}
+{% endif %}

@@ -13,14 +13,20 @@
 <h1>{{ survey.title }}</h1>
 
 <ul>
-        <h2>Statistics</h2>
-        <p>Number of questions: <strong>{{ statistics.numberQuestions }}</strong></p>
-        <p>Total votes: <strong>{{ statistics.totalVotes }}</strong></p>
+    <h2>Statistics</h2>
+    <p>Number of questions: <strong>{{ statistics.numberQuestions }}</strong></p>
+    <p>Total votes: <strong>{{ statistics.totalVotes }}</strong></p>
     {% for question in survey.question_set.all %}
         <h2>{{ question.question }}</h2>
-        {% for choice in question.choice_set.all %}
-            <div class="question"><p style="width:300px">{{ choice.choice }}<span style="float:right;"><strong>{{ choice.votes }} vote{{ choice.votes|pluralize }}</strong></span></p><div style="background:#999; width:300px; padding:0"><p style="padding:2px 3px; text-align:right; background:#333; color:#fff; font:10px Verdana; margin:0; width:{{ choice.percentage }}%">{{ choice.percentage }}%</p></div></div>
-        {% endfor %}
+        {% if question.type == question.TYPE_RADIO or question.type == question.TYPE_CHECKBOX %}
+            {% for choice in question.choice_set.all %}
+                <div class="question"><p style="width:300px">{{ choice.choice }}<span style="float:right;"><strong>{{ choice.votes }} vote{{ choice.votes|pluralize }}</strong></span></p><div style="background:#999; width:300px; padding:0"><p style="padding:2px 3px; text-align:right; background:#333; color:#fff; font:10px Verdana; margin:0; width:{{ choice.percentage }}%">{{ choice.percentage }}%</p></div></div>
+            {% endfor %}
+        {% elif question.type == question.TYPE_TEXTBOX or question.type == TYPE_TEXTAREA %}
+            {% for answer in question.answer_set.all %}
+                <div class="question"><p>{{ answer.value }}</p></div>
+            {% endfor %}
+        {% endif %}
     {% endfor %}
 </ul>
 
