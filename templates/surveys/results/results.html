@@ -15,7 +15,7 @@
 <ul>
     <h2>Statistics</h2>
     <p>Number of questions: <strong>{{ statistics.numberQuestions }}</strong></p>
-    <p>Total votes: <strong>{{ statistics.totalVotes }}</strong></p>
+    <p>Participants: <strong>{{ statistics.participants }}</strong></p>
     {% for question in survey.question_set.all %}
         <h2>{{ question.question }}</h2>
         {% if question.type == question.TYPE_RADIO or question.type == question.TYPE_CHECKBOX %}

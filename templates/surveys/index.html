@@ -8,7 +8,7 @@
 <h2>Newest surveys:</h2>
 {% if latest_survey_list %}
     {% for survey in latest_survey_list %}
-        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> created <strong>{{ survey.pub_date|naturaltime }}</strong></p>
+        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> published <strong>{{ survey.starttime|naturaltime }}</strong></p>
     {% endfor %}
 {% else %}
     <p>No surveys are available.</p>
@@ -29,9 +29,18 @@
 {% else %}
     <p>No surveys are available.</p>
 {% endif %}
-<h2>Unpublished surveys:</h2>
-{% if active_survey_list %}
-    {% for survey in active_survey_list %}
-        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> created <strong>{{ survey.pub_date|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
-    {% endfor %}
+{% if user.is_authenticated %}
+    {% if user.is_superuser %}
+        <h2>Unpublished surveys:</h2>
+        {% if active_survey_list %}
+            {% for survey in active_survey_list %}
+                <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> created <strong>{{ survey.created|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <h2>Your surveys:</h2>
+            {% for survey in user_survey_list %}
+                <p><a href="{% if survey.status == survey.STATUS_ACTIVE %}{% url surveys.views.edit survey_id=survey.id %}{% elif survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}{% else %}{% url surveys.views.detail survey_id=survey.id %}{% endif %}">{{ survey.title }}</a> [<strong>{{ survey.get_status_display }}</strong>]{% if survey.status == survey.STATUS_PUBLISHED %} {{ survey.get_resultDisplay_display }}, ends <strong>{{ survey.endtime|naturaltime }}</strong>{% endif %}</p>
+            {% endfor %}
+    {% endif %}
 {% endif %}

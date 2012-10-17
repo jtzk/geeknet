@@ -10,14 +10,31 @@
 <body>
     <h1>{{ survey.title }}</h1>
     <div class="surveyInfo">
-        <p>Survey Status: <strong>{{ survey.get_status_display }}</strong></p>
-        <p>Survey Start Time: <strong>{{ survey.starttime|naturaltime }}</strong></p>
-        <p>Survey End Time: <strong>{{ survey.endtime|naturaltime }}</strong></p>
-        <p>Questions: <strong>{{ survey.question_set.count }}</strong></p>
+        {% if survey.status == survey.STATUS_PUBLISHED %}
+            <p>Survey Status: <strong>{{ survey.get_status_display }}</strong></p>
+            <p>Survey Start Time: <strong>{{ survey.starttime|naturaltime }}</strong></p>
+            <p>Survey End Time: <strong>{{ survey.endtime|naturaltime }}</strong></p>
+            <p>Questions: <strong>{{ survey.question_set.count }}</strong></p>
+        {% elif survey.status == survey.STATUS_ENDED %}
+            <p><strong>This survey has ended.</strong></p>
+        {% else %}
+            {% if user.is_superuser %}
+                <p><strong>This survey is [<a href="{% url surveys.views.edit survey_id=survey.id %}">{{ survey.get_status_display }}</a>] and cannot be viewed by users.</strong></p>
+            {% else %}
+                <p><strong>You cannot view an unpublished survey.</strong></p>
+            {% endif %}
+        {% endif %}
+        <p><a href="{% url surveys.views.index %}">Back to index</a></p>
     </div>
-    <form action="{% url surveys.views.participate survey_id=survey.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Take survey" />
-    </form>
+    {% if survey.status == survey.STATUS_PUBLISHED %}
+        <form action="{% url surveys.views.participate survey_id=survey.id %}" method="post">
+            {% csrf_token %}
+            {% if request.session.surveyee and request.session.question %}
+                <a href="{% url surveys.views.question survey_id=survey.id question_id=request.session.question %}">Continue survey</a>
+            {% else %}
+                <input type="submit" value="Take survey" />
+            {% endif %}
+        </form>
+    {% endif %}
 </body>
 </html>

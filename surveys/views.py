@@ -1,3 +1,5 @@
+import datetime, dateutil.parser
+from django.utils import timezone
 from django.shortcuts import render_to_response, get_object_or_404
 from surveys.models import Survey, Choice, Question, Surveyee
 from django.http import HttpResponseRedirect
@@ -5,26 +7,46 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.db.models import Sum
 from surveys.forms import SurveyCreationForm
+from django.contrib.auth.models import User
 
 def index(request):
     latest_survey_list = Survey.objects.all().filter(status=Survey.STATUS_PUBLISHED).order_by('-starttime')[:5]
     popular_survey_list = Survey.objects.filter(status=Survey.STATUS_PUBLISHED).annotate(tvotes=Sum('question__choice__votes')).order_by('-tvotes').filter(tvotes__gt=1)[:5]
     all_survey_list = Survey.objects.filter(status=Survey.STATUS_PUBLISHED).order_by('id')
     active_survey_list = Survey.objects.filter(status=Survey.STATUS_ACTIVE).order_by('id')
-    return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list}, RequestContext(request))
+    if request.user.is_authenticated():
+        user_survey_list = Survey.objects.filter(owner=request.user).exclude(status=Survey.STATUS_INACTIVE).order_by('endtime')
+        for survey in user_survey_list:
+            if survey.endtime <= timezone.now():
+                survey.status = survey.STATUS_ENDED
+                survey.save()
+        return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list, 'user_survey_list': user_survey_list,}, RequestContext(request))
+
+    return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list,}, RequestContext(request))
 
 def detail(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
-    return render_to_response('surveys/detail.html', {'survey': s}, context_instance=RequestContext(request))
+    if s.endtime != None:
+        if s.status != s.STATUS_ENDED and s.endtime <= timezone.now():
+            s.status = s.STATUS_ENDED
+            s.save()
+    return render_to_response('surveys/detail.html', {'survey': s,}, context_instance=RequestContext(request))
 
 def participate(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
     q = s.question_set.all()[:1]
     if q:
         q = q[0]
-    surveyee = Surveyee(survey=s, user=request.user, ip=get_client_ip(request))
+
+    surveyee = Surveyee(survey=s, ip=get_client_ip(request))
+    if request.user.is_authenticated():
+        surveyee.user = request.user
+    else:
+        surveyee.user = User.objects.get(pk=0)
     surveyee.save()
-    return render_to_response('surveys/question.html', {'survey': s, 'question': q}, context_instance=RequestContext(request))
+    request.session["surveyee"] = surveyee.id
+    request.session["question"] = q.id
+    return HttpResponseRedirect(reverse('surveys.views.question', args=(s.id, q.id)))
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -40,15 +62,19 @@ def list(request, survey_id):
 
 def question(request, survey_id, question_id):
     s = get_object_or_404(Survey, pk=survey_id)
-    q = s.question_set.get(pk=question_id)
+    if "surveyee" in request.session:
+        q = s.question_set.get(pk=question_id)
 
-    for question in s.question_set.all():
-        if question.id == q.id:
-            break
-        else:
-            q.number += 1
+        for question in s.question_set.all():
+            if question.id == q.id:
+                break
+            else:
+                q.number += 1
 
-    return render_to_response('surveys/question.html', {'survey': s, 'question': q}, context_instance=RequestContext(request))
+        return render_to_response('surveys/question.html', {'survey': s, 'question': q}, context_instance=RequestContext(request))
+
+    else:
+        return HttpResponseRedirect(reverse('surveys.views.detail', args=(s.id,)))
 
 def results(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
@@ -78,8 +104,17 @@ def vote(request, survey_id):
                     a = q.answer_set.create(question=q, value=v)
                     a.save()
 
-        if (request.POST.get("nextquestion")):
+        if request.POST.get('nextquestion'):
+            request.session["question"] = int(request.POST.get('nextquestion'))
             return HttpResponseRedirect(reverse('surveys.views.question', args=(s.id, int(request.POST.get("nextquestion")))))
+
+    if "surveyee" in request.session:
+        surveyee = s.surveyee_set.get(pk=request.session["surveyee"])
+        surveyee.end()
+        if request.session["question"]:
+            del request.session["question"]
+        if request.session["surveyee"]:
+            del request.session["surveyee"]
 
     return HttpResponseRedirect(reverse('surveys.views.results', args=(s.id,)))
 
@@ -144,6 +179,12 @@ def edit(request, survey_id):
                 s.status = s.STATUS_PUBLISHED
                 if 'resultDisplay' in request.POST:
                     s.resultDisplay = int(request.POST["resultDisplay"])
-                s.save()
+                if 'endtime' in request.POST:
+                    if dateutil.parser.parse(request.POST["endtime"]) >= datetime.datetime.now():
+                        s.endtime = dateutil.parser.parse(request.POST["endtime"])
+                        s.starttime = timezone.now()
+                        s.save()
+                    else:
+                        return HttpResponseRedirect(reverse('surveys.views.edit', args=(s.id,)))
         return HttpResponseRedirect(reverse('surveys.views.edit', args=(s.id,)))
-    return render_to_response('surveys/edit.html', {'survey': s}, context_instance=RequestContext(request))
+    return render_to_response('surveys/edit.html', {'survey': s, 'today':datetime.datetime.now(), 'tomorrow': datetime.datetime.now() + datetime.timedelta(days=1)}, context_instance=RequestContext(request))

@@ -1,7 +1,7 @@
 import datetime
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum
 
 class Survey(models.Model):
     # status types
@@ -33,13 +33,13 @@ class Survey(models.Model):
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_ACTIVE)
     resultDisplay = models.IntegerField(choices=RESULTS_CHOICES, default=RESULTS_PUBLIC)
     owner = models.ForeignKey(User)
-    starttime = models.DateTimeField('Start time')
-    endtime = models.DateTimeField('End time')
+    created = models.DateTimeField()
+    starttime = models.DateTimeField('Start time', null=True, default=None)
+    endtime = models.DateTimeField('End time', null=True, default=None)
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.starttime = datetime.datetime.today()
-            self.endtime = datetime.datetime.today() + datetime.timedelta(days=7)
+            self.created = datetime.datetime.today()
         super(Survey, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -50,6 +50,7 @@ class Survey(models.Model):
 
         results["numberQuestions"] = self.question_set.all().count
         #results["totalVotes"] += self.question_set.all().aggregate(tvotes=Sum('choice__votes'))['tvotes']
+        results["participants"] = self.surveyee_set.all().count
 
         return results
 
@@ -123,11 +124,13 @@ class Surveyee(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.starttime = datetime.datetime.today()
+            self.starttime = datetime.datetime.now()
             self.endtime = None
-        else:
-            self.endtime = datetime.datetime.today()
         super(Surveyee, self).save(*args, **kwargs)
+
+    def end(self):
+        self.endtime = datetime.datetime.now()
+        super(Surveyee, self).save()
 
 class Answer(models.Model):
     question = models.ForeignKey(Question)
