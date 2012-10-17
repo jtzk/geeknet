@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Survey {{ survey.title }} - Add Questions</title>
+    <title>Edit - {{ survey.title }}</title>
     <script src="/static/js/jquery.js" type="text/javascript"></script>
     <style type="text/css">
         div.surveyinfo { border:1px solid #eee; background:#f9f9f9; padding:10px; width:620px }
@@ -22,8 +22,12 @@
         div.choices .text { width:350px; border:1px solid #999; padding:3px 5px; margin-left:5px; margin-bottom:20px; font-size:12px }
         div.choices textarea.text { height:100px; font:12px "Arial" }
         div.buttons { position:fixed; top:125px; left:700px }
+        div.buttons p { font:bold 12px Verdana }
+        div.buttons p.resultDisplay { margin:0; height:20px }
+        div.buttons p.resultDisplay input { width:auto; margin:0 10px; }
+        div.buttons label { font-weight:normal; position:relative; bottom:8px; }
         div.buttons .hint { font:10px Verdana; margin:2px 0 50px 8px; color:#666 }
-        div.buttons input, p.button { font:bold 11px Verdana; width:130px; height:25px; text-align:center; }
+        div.buttons input, div.buttons p.button { font:bold 11px Verdana; width:130px; height:25px; text-align:center; }
         div.buttons p.button { border:1px solid #0af; }
         div.buttons p.button a { line-height:25px; text-decoration:none; width:130px; display:block; background:#0bf; color:#fff }
         div.buttons input:hover { cursor:pointer }
@@ -33,106 +37,116 @@
 </head>
 <body>
 <h1>Edit Survey</h1>
-<div class="surveyinfo">
-    <p class="status">Survey status: <strong>{{ survey.get_status_display }}</strong></p>
-    {% if survey.status == survey.STATUS_ACTIVE %}
-        <p>You can edit this survey.</p>
-    {% elif survey.status != survey.STATUS_ACTIVE %}
-        <p>You cannot edit this survey.</p>
-    {% endif %}
-</div>
-<form id="surveyform" action="" method="post">
-    {% csrf_token %}
-    <div class="survey">
-        <p><input type="text" name="surveyTitle" value="{{ survey.title }}" /></p>
+{% if survey.owner == user or user.is_superuser %}
+    <div class="surveyinfo">
+        <p class="status">Survey status: <strong>{{ survey.get_status_display }}</strong></p>
+        {% if survey.status == survey.STATUS_ACTIVE %}
+            <p>You can edit this survey.</p>
+        {% elif survey.status != survey.STATUS_ACTIVE %}
+            <p>You cannot edit this survey.</p>
+        {% endif %}
     </div>
-    {% for question in survey.question_set.all %}
+    <form id="surveyform" action="" method="post">
         {% csrf_token %}
-        <div class="question">
-            <h2>Question {{ forloop.counter }}</h2>
-            <p><input class="question" name="questionName-{{ question.id }}" type="input" value="{{ question.question }}" /></p>
-            <p>
-            <ul class="question_type">
-                <li>
-                    <input type="radio" id="question{{ question.id }}type-1" name="questionType-{{ question.id }}" value="1" {% if question.type == 1 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-1">Radio</label>
-                </li>
-                <li>
-                    <input type="radio" id="question{{ question.id }}type-2" name="questionType-{{ question.id }}" value="2" {% if question.type == 2 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-2">Checkbox</label>
-                </li>
-                <li>
-                    <input type="radio" id="question{{ question.id }}type-3" name="questionType-{{ question.id }}" value="3" {% if question.type == 3 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-3">Text Box</label>
-                </li>
-                <li>
-                    <input type="radio" id="question{{ question.id }}type-4" name="questionType-{{ question.id }}" value="4" {% if question.type == 4 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-4">Text Area</label>
-                </li>
-            </ul>
-            </p>
-            <div class="choices">
-                <h2>Choices:</h2>
-                {% if question.type == 1 or question.type == 2 %}
-                    {% for choice in question.choice_set.all %}
-                        <p>
-                            {% autoescape off %}
-                                {% if question.type == 1 %}
-                                    <input type="radio" name="question{{ question.id }}" onclick="if (this.checked)this.checked=false" /><input class="choice" name="choice-{{ choice.id }}" type="text" value="{{ choice.choice }}" />
-                                {% elif question.type == 2 %}
-                                    <input type="checkbox" onclick="if (this.checked)this.checked=false" /><input class="choice" name="choice-{{ choice.id }}" type="text" value="{{ choice.choice }}" />
-                                {% endif %}
-                            {% endautoescape %}
-                        </p>
-                    {% endfor %}
-                    {% if survey.status == survey.STATUS_ACTIVE %}
-                        <p>
-                            <input type="{% if question.type == 1 %}radio{% elif question.type == 2 %}checkbox{% endif %}" onclick="if (this.checked)this.checked=false" /><input class="choice new" name="newChoice-{{ question.id }}" type="text" value="Add new choice" onfocus="if (this.value == 'Add new choice')this.value='';this.style.color='#000'" onblur="if(this.value=='') { this.value='Add new choice';this.style.color='#ccc' }" />
-                        </p>
+        <div class="survey">
+            <p><input type="text" name="surveyTitle" value="{{ survey.title }}" /></p>
+        </div>
+        {% for question in survey.question_set.all %}
+            {% csrf_token %}
+            <div class="question">
+                <h2>Question {{ forloop.counter }}</h2>
+                <p><input class="question" name="questionName-{{ question.id }}" type="input" value="{{ question.question }}" /></p>
+                <p>
+                <ul class="question_type">
+                    <li>
+                        <input type="radio" id="question{{ question.id }}type-1" name="questionType-{{ question.id }}" value="1" {% if question.type == 1 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-1">Radio</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="question{{ question.id }}type-2" name="questionType-{{ question.id }}" value="2" {% if question.type == 2 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-2">Checkbox</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="question{{ question.id }}type-3" name="questionType-{{ question.id }}" value="3" {% if question.type == 3 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-3">Text Box</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="question{{ question.id }}type-4" name="questionType-{{ question.id }}" value="4" {% if question.type == 4 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-4">Text Area</label>
+                    </li>
+                </ul>
+                </p>
+                <div class="choices">
+                    <h2>Choices:</h2>
+                    {% if question.type == 1 or question.type == 2 %}
+                        {% for choice in question.choice_set.all %}
+                            <p>
+                                {% autoescape off %}
+                                    {% if question.type == 1 %}
+                                        <input type="radio" name="question{{ question.id }}" onclick="if (this.checked)this.checked=false" /><input class="choice" name="choice-{{ choice.id }}" type="text" value="{{ choice.choice }}" />
+                                    {% elif question.type == 2 %}
+                                        <input type="checkbox" onclick="if (this.checked)this.checked=false" /><input class="choice" name="choice-{{ choice.id }}" type="text" value="{{ choice.choice }}" />
+                                    {% endif %}
+                                {% endautoescape %}
+                            </p>
+                        {% endfor %}
+                        {% if survey.status == survey.STATUS_ACTIVE %}
+                            <p>
+                                <input type="{% if question.type == 1 %}radio{% elif question.type == 2 %}checkbox{% endif %}" onclick="if (this.checked)this.checked=false" /><input class="choice new" name="newChoice-{{ question.id }}" type="text" value="Add new choice" onfocus="if (this.value == 'Add new choice')this.value='';this.style.color='#000'" onblur="if(this.value=='') { this.value='Add new choice';this.style.color='#ccc' }" />
+                            </p>
+                        {% endif %}
+                    {% elif question.type == 3 %}
+                        <input class="text" type="text" value="Text is entered here" />
+                    {% elif question.type == 4 %}
+                        <textarea class="text" type="text">Text is entered here&#10;&#10;&#10;&#10;Multiple lines are supported</textarea>
                     {% endif %}
-                {% elif question.type == 3 %}
-                    <input class="text" type="text" value="Text is entered here" />
-                {% elif question.type == 4 %}
-                    <textarea class="text" type="text">Text is entered here&#10;&#10;&#10;&#10;Multiple lines are supported</textarea>
-                {% endif %}
+                </div>
             </div>
+        {% endfor %}
+        {% if survey.status == survey.STATUS_ACTIVE %}
+            <div class="question">
+                <h2>New Question</h2>
+                <p><input class="question new" name="newQuestion" type="input" value="Enter a new question" onfocus="if (this.value == 'Enter a new question')this.value='';this.style.color='#000'" onblur="if(this.value=='') { this.value='Enter a new question';this.style.color='#ccc' }" /></p>
+                <p>
+                <ul class="question_type">
+                    <li>
+                        <input type="radio" id="newQuestionType-1" name="newQuestionType" checked="checked" value="1" /><label for="newQuestionType-1">Radio</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="newQuestionType-2" name="newQuestionType" value="2" /><label for="newQuestionType-2">Checkbox</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="newQuestionType-3" name="newQuestionType" value="3" /><label for="newQuestionType-3">Text Box</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="newQuestionType-4" name="newQuestionType" value="4" /><label for="newQuestionType-4">Text Area</label>
+                    </li>
+                </ul>
+                </p>
+            </div>
+        {% endif %}
+        <div class="buttons">
+            <h2>Controls</h2>
+            {% if survey.status == survey.STATUS_ACTIVE %}
+                <input class="submit" name="apply" type="submit" value="Apply Changes" /><input class="reset" type="reset" value="Reset" />
+                <p class="hint">Hint: You may also use the "Enter" key to apply changes</p>
+            {% endif %}
+            <p class="button"><a href="{% url surveys.views.detail survey_id=survey.id %}">Done Editing</a></p>
+            {% if survey.status == survey.STATUS_ACTIVE %}
+                <h2>Survey Settings</h2>
+                <p>Results shown to:</p>
+                {% for i, k in survey.RESULTS_CHOICES %}
+                    <p class="resultDisplay"><input type="radio" name="resultDisplay" value="{{ i }}" id="option{{ i }}" {% if i == survey.RESULTS_PUBLIC %}checked="checked"{% endif %}/><label for="option{{ i }}">{{ k }}</label></p>
+                {% endfor %}
+                <p><input type="submit" name="publish" value="Publish" /></p>
+            {% endif %}
         </div>
-    {% endfor %}
-    {% if survey.status == survey.STATUS_ACTIVE %}
-        <div class="question">
-            <h2>New Question</h2>
-            <p><input class="question new" name="newQuestion" type="input" value="Enter a new question" onfocus="if (this.value == 'Enter a new question')this.value='';this.style.color='#000'" onblur="if(this.value=='') { this.value='Enter a new question';this.style.color='#ccc' }" /></p>
-            <p>
-            <ul class="question_type">
-                <li>
-                    <input type="radio" id="newQuestionType-1" name="newQuestionType" checked="checked" value="1" /><label for="newQuestionType-1">Radio</label>
-                </li>
-                <li>
-                    <input type="radio" id="newQuestionType-2" name="newQuestionType" value="2" /><label for="newQuestionType-2">Checkbox</label>
-                </li>
-                <li>
-                    <input type="radio" id="newQuestionType-3" name="newQuestionType" value="3" /><label for="newQuestionType-3">Text Box</label>
-                </li>
-                <li>
-                    <input type="radio" id="newQuestionType-4" name="newQuestionType" value="4" /><label for="newQuestionType-4">Text Area</label>
-                </li>
-            </ul>
-            </p>
-        </div>
+    </form>
+    {% if survey.status != survey.STATUS_ACTIVE %}
+        <script>
+            $("#surveyform :input").attr("disabled", true);
+        </script>
     {% endif %}
-    <div class="buttons">
-        <h2>Controls</h2>
-        {% if survey.status == survey.STATUS_ACTIVE %}
-            <input class="submit" name="apply" type="submit" value="Apply Changes" /><input class="reset" type="reset" value="Reset" />
-            <p class="hint">Hint: You may also use the "Enter" key to apply changes</p>
-        {% endif %}
-        <p class="button"><a href="{% url surveys.views.detail survey_id=survey.id %}">Done Editing</a></p>
-        {% if survey.status == survey.STATUS_ACTIVE %}
-            <h2>Publish Settings</h2>
-            <input type="submit" name="publish" value="Publish" />
-        {% endif %}
+{% else %}
+    <div class="surveyinfo">
+        <p>You cannot edit someone else's survey.</p>
     </div>
-</form>
-{% if survey.status != survey.STATUS_ACTIVE %}
-    <script>
-        $("#surveyform :input").attr("disabled", true);
-    </script>
 {% endif %}
 </body>
 </html>

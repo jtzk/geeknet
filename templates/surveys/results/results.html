@@ -22,7 +22,7 @@
             {% for choice in question.choice_set.all %}
                 <div class="question"><p style="width:300px">{{ choice.choice }}<span style="float:right;"><strong>{{ choice.votes }} vote{{ choice.votes|pluralize }}</strong></span></p><div style="background:#999; width:300px; padding:0"><p style="padding:2px 3px; text-align:right; background:#333; color:#fff; font:10px Verdana; margin:0; width:{{ choice.percentage }}%">{{ choice.percentage }}%</p></div></div>
             {% endfor %}
-        {% elif question.type == question.TYPE_TEXTBOX or question.type == TYPE_TEXTAREA %}
+        {% elif question.type == question.TYPE_TEXTBOX or question.type == question.TYPE_TEXTAREA %}
             {% for answer in question.answer_set.all %}
                 <div class="question"><p>{{ answer.value }}</p></div>
             {% endfor %}

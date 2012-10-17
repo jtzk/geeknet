@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, get_object_or_404
-from surveys.models import Survey, Choice, Question, Answer
+from surveys.models import Survey, Choice, Question, Surveyee
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -7,7 +7,7 @@ from django.db.models import Sum
 from surveys.forms import SurveyCreationForm
 
 def index(request):
-    latest_survey_list = Survey.objects.all().filter(status=Survey.STATUS_PUBLISHED).order_by('-pub_date')[:5]
+    latest_survey_list = Survey.objects.all().filter(status=Survey.STATUS_PUBLISHED).order_by('-starttime')[:5]
     popular_survey_list = Survey.objects.filter(status=Survey.STATUS_PUBLISHED).annotate(tvotes=Sum('question__choice__votes')).order_by('-tvotes').filter(tvotes__gt=1)[:5]
     all_survey_list = Survey.objects.filter(status=Survey.STATUS_PUBLISHED).order_by('id')
     active_survey_list = Survey.objects.filter(status=Survey.STATUS_ACTIVE).order_by('id')
@@ -15,10 +15,24 @@ def index(request):
 
 def detail(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
+    return render_to_response('surveys/detail.html', {'survey': s}, context_instance=RequestContext(request))
+
+def participate(request, survey_id):
+    s = get_object_or_404(Survey, pk=survey_id)
     q = s.question_set.all()[:1]
     if q:
         q = q[0]
+    surveyee = Surveyee(survey=s, user=request.user, ip=get_client_ip(request))
+    surveyee.save()
     return render_to_response('surveys/question.html', {'survey': s, 'question': q}, context_instance=RequestContext(request))
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 def list(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
@@ -61,9 +75,7 @@ def vote(request, survey_id):
                         c.votes += 1
                         c.save()
                 elif q.type == q.TYPE_TEXTBOX or q.type == q.TYPE_TEXTAREA:
-                    a = Answer()
-                    a.question = q
-                    a.value = v
+                    a = q.answer_set.create(question=q, value=v)
                     a.save()
 
         if (request.POST.get("nextquestion")):
@@ -72,10 +84,12 @@ def vote(request, survey_id):
     return HttpResponseRedirect(reverse('surveys.views.results', args=(s.id,)))
 
 def create(request):
-    if request.method == "POST":
+    if request.user.is_authenticated() and request.method == "POST":
         form = SurveyCreationForm(request.POST)
         if form.is_valid():
-            new_survey = form.save()
+            new_survey = form.save(commit=False)
+            new_survey.owner = request.user
+            new_survey.save()
             return HttpResponseRedirect(reverse('surveys.views.edit', args=(new_survey.id,)))
     else:
         form = SurveyCreationForm()
@@ -128,6 +142,8 @@ def edit(request, survey_id):
                     q.save()
             if 'publish' in request.POST:
                 s.status = s.STATUS_PUBLISHED
+                if 'resultDisplay' in request.POST:
+                    s.resultDisplay = int(request.POST["resultDisplay"])
                 s.save()
         return HttpResponseRedirect(reverse('surveys.views.edit', args=(s.id,)))
     return render_to_response('surveys/edit.html', {'survey': s}, context_instance=RequestContext(request))

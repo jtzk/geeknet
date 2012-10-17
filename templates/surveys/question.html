@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>{{ survey.title }}</title>
 </head>
 <body>
 <h1>{{ survey.title }}</h1>
-<p><a href="{% url surveys.views.edit survey_id=survey.id %}">Edit this survey</a></p>
+{% if survey.owner == user or user.is_superuser %}
+    <p><a href="{% url surveys.views.edit survey_id=survey.id %}">Edit this survey</a></p>
+{% endif %}
 <form action="{% url surveys.views.vote survey_id=survey.id %}" method="post">
     {% csrf_token %}
     {% if question %}
@@ -18,6 +20,9 @@
             {% endfor %}
         {% elif question.type == question.TYPE_TEXTBOX %}
             <input type="text" name="question-{{ question.id }}" value="" /><br />
+
+        {% elif question.type == question.TYPE_TEXTAREA %}
+            <textarea style="width:400px;height:200px" name="question-{{ question.id }}"></textarea><br />
         {% endif %}
         {% if question.next %}<input type="hidden" name="nextquestion" value="{{ question.next.id }}" />{% endif %}
         <input type="submit" value="Vote" />

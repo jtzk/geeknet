@@ -1,22 +1,23 @@
+{% load humanize %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>{{ survey.title }}</title>
+    <style type="text/css">
+        .surveyInfo { border:1px solid #ccc; background:#eee; padding:0.5em 1em; width:30% }
+    </style>
 </head>
 <body>
     <h1>{{ survey.title }}</h1>
-    <p><a href="{% url surveys.views.list survey_id=survey.id %}">See question list</a></p>
-    <form action="{% url surveys.views.vote survey_id=survey.id %}" method="post">
+    <div class="surveyInfo">
+        <p>Survey Status: <strong>{{ survey.get_status_display }}</strong></p>
+        <p>Survey Start Time: <strong>{{ survey.starttime|naturaltime }}</strong></p>
+        <p>Survey End Time: <strong>{{ survey.endtime|naturaltime }}</strong></p>
+        <p>Questions: <strong>{{ survey.question_set.count }}</strong></p>
+    </div>
+    <form action="{% url surveys.views.participate survey_id=survey.id %}" method="post">
         {% csrf_token %}
-        {% for question in survey.question_set.all %}
-            <h3>Question {{ forloop.counter }}:</h3>
-            <p>{{ question.question }}</p>
-            {% for choice in question.choice_set.all %}
-                <input type="radio" name="question-{{ question.id }}" id="choice{{ choice.id }}" value="{{ choice.id }}" />
-                <label for="choice{{ choice.id }}">{{ choice.choice }}</label><br />
-            {% endfor %}
-        {% endfor %}
-        <input type="submit" value="Vote" />
+        <input type="submit" value="Take survey" />
     </form>
 </body>
 </html>

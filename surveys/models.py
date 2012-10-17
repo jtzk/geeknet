@@ -23,9 +23,9 @@ class Survey(models.Model):
     RESULTS_PRIVATE = 2
 
     RESULTS_CHOICES = (
-        (RESULTS_PUBLIC, 'Public'),
-        (RESULTS_USER, 'User'),
-        (RESULTS_PRIVATE, 'Hidden')
+        (RESULTS_PUBLIC, 'Public (Anyone can see)'),
+        (RESULTS_USER, 'Users (Users can see)'),
+        (RESULTS_PRIVATE, 'Hidden (Only you can see)')
     )
 
     title = models.CharField(max_length=100)
@@ -33,7 +33,14 @@ class Survey(models.Model):
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_ACTIVE)
     resultDisplay = models.IntegerField(choices=RESULTS_CHOICES, default=RESULTS_PUBLIC)
     owner = models.ForeignKey(User)
-    pub_date = models.DateTimeField('Date published', auto_now_add=True)
+    starttime = models.DateTimeField('Start time')
+    endtime = models.DateTimeField('End time')
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.starttime = datetime.datetime.today()
+            self.endtime = datetime.datetime.today() + datetime.timedelta(days=7)
+        super(Survey, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.title
@@ -109,10 +116,22 @@ class Choice(models.Model):
 
 class Surveyee(models.Model):
     survey = models.ForeignKey(Survey)
+    user = models.ForeignKey(User)
+    ip = models.GenericIPAddressField(blank=True)
+    starttime = models.DateTimeField('Start Time')
+    endtime = models.DateTimeField('End Time', blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.starttime = datetime.datetime.today()
+            self.endtime = None
+        else:
+            self.endtime = datetime.datetime.today()
+        super(Surveyee, self).save(*args, **kwargs)
 
 class Answer(models.Model):
     question = models.ForeignKey(Question)
-    value = models.CharField(max_length=1024, blank=True)
+    value = models.TextField(blank=True)
 
     def __unicode__(self):
         return self.value

@@ -6,7 +6,7 @@ from surveys.models import Survey, Question
 class SurveyCreationForm(forms.ModelForm):
     class Meta:
         model = Survey
-        exclude = {'status', 'owner'}
+        exclude = {'status', 'owner', 'resultDisplay', 'starttime', 'endtime'}
 
 class QuestionForm(forms.ModelForm):
     class Meta:

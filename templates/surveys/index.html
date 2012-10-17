@@ -1,6 +1,10 @@
 {% load humanize %}
 <h1>Surveys</h1>
-<p><a href="{% url surveys.views.create %}">Create a new survey</a></p>
+{% if user.is_authenticated %}
+    <p>Hi, {{ user.username }}. <a href="{% url surveys.views.create %}">Create a new survey</a></p>
+{% else %}
+    <p><a href="{% url accounts.views.accounthome %}">Login</a> to create a survey</p>
+{% endif %}
 <h2>Newest surveys:</h2>
 {% if latest_survey_list %}
     {% for survey in latest_survey_list %}

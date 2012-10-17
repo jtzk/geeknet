@@ -11,11 +11,11 @@ class QuestionInline(admin.TabularInline):
 
 class SurveyAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,                  {'fields': ['title', 'information', 'owner']}),
+        (None,                  {'fields': ['title', 'information', 'owner', 'resultDisplay', 'status']}),
         ]
     inlines = [QuestionInline]
 
-    list_display = ('title', 'information', 'owner', 'pub_date')
+    list_display = ('title', 'information', 'owner', 'starttime')
 
 class QuestionAdmin(admin.ModelAdmin):
     fields = ['survey', 'question', 'instruction', 'type']
