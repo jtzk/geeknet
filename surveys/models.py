@@ -54,6 +54,14 @@ class Survey(models.Model):
 
         return results
 
+    @property
+    def numQuestions(self):
+        return self.question_set.count()
+
+    @property
+    def participants(self):
+        return self.surveyee_set.all().count()
+
 class Question(models.Model):
     # question types
     TYPE_RADIO = 1
@@ -117,9 +125,10 @@ class Choice(models.Model):
 
 class Surveyee(models.Model):
     survey = models.ForeignKey(Survey)
+    question = models.ForeignKey(Question)
     user = models.ForeignKey(User)
     ip = models.GenericIPAddressField(blank=True)
-    starttime = models.DateTimeField('Start Time')
+    starttime = models.DateTimeField('Start Time', default=datetime.datetime.now())
     endtime = models.DateTimeField('End Time', blank=True, null=True)
 
     def save(self, *args, **kwargs):
