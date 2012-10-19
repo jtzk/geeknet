@@ -1,5 +1,5 @@
 import datetime
-from django.utils import timezone
+from django.template.defaultfilters import slugify
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -61,6 +61,10 @@ class Survey(models.Model):
     @property
     def participants(self):
         return self.surveyee_set.all().count()
+
+    @property
+    def slug(self):
+        return slugify(self.title)
 
 class Question(models.Model):
     # question types

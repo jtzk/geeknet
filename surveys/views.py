@@ -25,8 +25,10 @@ def index(request):
 
     return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list,}, RequestContext(request))
 
-def detail(request, survey_id):
+def detail(request, survey_id, slug):
     s = get_object_or_404(Survey, pk=survey_id)
+    if slug == "default":
+        return HttpResponseRedirect(reverse('surveys.views.detail', args=(s.id, s.slug)))
     if s.endtime != None:
         if s.status != s.STATUS_ENDED and s.endtime <= timezone.now():
             s.status = s.STATUS_ENDED
@@ -91,7 +93,7 @@ def question(request, survey_id, question_id):
             try:
                 surveyee = s.surveyee_set.get(pk=request.session["surveys"][s.id], endtime=None)
             except Surveyee.DoesNotExist:
-                return HttpResponseRedirect(reverse('surveys.views.detail', args=(s.id,)))
+                return HttpResponseRedirect(reverse('surveys.views.detail', args=(s.id, s.slug)))
 
             surveyee.question = q
             surveyee.save()
@@ -104,7 +106,7 @@ def question(request, survey_id, question_id):
 
             return render_to_response('surveys/question.html', {'survey': s, 'question': q}, context_instance=RequestContext(request))
 
-    return HttpResponseRedirect(reverse('surveys.views.detail', args=(s.id,)))
+    return HttpResponseRedirect(reverse('surveys.views.detail', args=(s.id, s.slug)))
 
 def results(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)

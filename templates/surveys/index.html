@@ -20,7 +20,7 @@
         <h2>Newest surveys:</h2>
         {% if latest_survey_list %}
             {% for survey in latest_survey_list %}
-                <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> published <strong>{{ survey.starttime|naturaltime }}</strong></p>
+                <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> published <strong>{{ survey.starttime|naturaltime }}</strong></p>
             {% endfor %}
         {% else %}
             <p>No surveys are available.</p>
@@ -28,7 +28,7 @@
         <h2>Popular surveys:</h2>
         {% if popular_survey_list %}
             {% for survey in popular_survey_list %}
-                <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> <strong>{{ survey.participants }} participants</strong></p>
+                <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> <strong>{{ survey.participants }} participants</strong></p>
             {% endfor %}
         {% else %}
             <p>No surveys are available.</p>
@@ -36,7 +36,7 @@
         <h2>All surveys:</h2>
         {% if all_survey_list %}
             {% for survey in all_survey_list %}
-                <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> by <strong>{{ survey.owner.get_full_name }}</strong></p>
+                <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> by <strong>{{ survey.owner.get_full_name }}</strong></p>
             {% endfor %}
         {% else %}
             <p>No surveys are available.</p>
@@ -46,14 +46,14 @@
                 <h2>Unpublished surveys:</h2>
                 {% if active_survey_list %}
                     {% for survey in active_survey_list %}
-                        <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> created <strong>{{ survey.created|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
+                        <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> created <strong>{{ survey.created|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
                     {% endfor %}
                 {% endif %}
             {% else %}
                 <h2>Your surveys:</h2>
                     {% for survey in user_survey_list %}
                         <div class="survey">
-                            <h3><a href="{% if survey.status == survey.STATUS_ACTIVE %}{% url surveys.views.edit survey_id=survey.id %}{% elif survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}{% else %}{% url surveys.views.detail survey_id=survey.id %}{% endif %}">{{ survey.title }}</a></h3>
+                            <h3><a href="{% if survey.status == survey.STATUS_ACTIVE %}{% url surveys.views.edit survey_id=survey.id %}{% elif survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}{% else %}{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}{% endif %}">{{ survey.title }}</a></h3>
                             <ul>
                                 <li class="label">Status:</li><li class="text">{{ survey.get_status_display }}</li>
                                 <li class="label">Questions:</li><li class="text">{{ survey.numQuestions }}</li>

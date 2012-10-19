@@ -137,7 +137,7 @@
                 <input class="submit" name="apply" type="submit" value="Apply Changes" /><input class="reset" type="reset" value="Reset" />
                 <p class="hint">Hint: You may also use the "Enter" key to apply changes</p>
             {% endif %}
-            <p class="button"><a href="{% if survey.status == survey.STATUS_PUBLISHED %}{% url surveys.views.detail survey_id=survey.id %}{% else %}{% url surveys.views.index %}{% endif %}">Done Editing</a></p>
+            <p class="button"><a href="{% if survey.status == survey.STATUS_PUBLISHED %}{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}{% else %}{% url surveys.views.index %}{% endif %}">Done Editing</a></p>
             {% if survey.status == survey.STATUS_ACTIVE %}
                 <h2>Survey Settings</h2>
                 <p>Results shown to:</p>
