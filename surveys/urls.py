@@ -8,7 +8,6 @@ urlpatterns = patterns('surveys.views',
     url(r'^(?P<survey_id>\d+)/results/$', 'results'),
     url(r'^(?P<survey_id>\d+)/vote/$', 'vote'),
     url(r'^create/$', 'create'),
-    url(r'^(?P<survey_id>\d+)/participate/$', 'participate'),
     url(r'^(?P<survey_id>\d+)/edit/$', 'edit'),
     url(r'^(?P<survey_id>\d+)/(?P<slug>[-\w]+)/$', 'detail'),
 )

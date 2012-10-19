@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>End Survey</title>
+    <style type="text/css">
+        ul { list-style-type: none; margin: 0; padding: 0 }
+        li { display:inline; margin:0  }
+    </style>
+</head>
+<body>
+    <h1>End {{ survey.title }}</h1>
+    {% if action == 0 %}
+        <p>Are you sure you wish to end the survey "{{ survey.title }}" now?</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="end" />
+            <ul>
+                <li><input type="submit" name="confirm" value="Yes" /></li>
+                <li><input type="submit" name="negative" value="No" /></li>
+            </ul>
+        </form>
+    {% else %}
+        <p>Ended. You may now view the survey <a href="{% url surveys.views.results survey_id=survey.id %}">results</a>.</p>
+    {% endif %}
+</body>
+</html>

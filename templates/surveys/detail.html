@@ -31,14 +31,14 @@
         <p><a href="{% url surveys.views.index %}">Back to index</a></p>
     </div>
     {% if survey.status == survey.STATUS_PUBLISHED %}
-        <form action="{% url surveys.views.participate survey_id=survey.id %}" method="post">
-            {% csrf_token %}
-            {% if nextquestion %}
-                <a href="{% url surveys.views.question survey_id=survey.id question_id=nextquestion.id %}">Continue survey</a>
-            {% else %}
-                <input type="submit" value="Take survey" />
-            {% endif %}
-        </form>
+        {% if nextquestion %}
+            <a href="{% url surveys.views.question survey_id=survey.id question_id=nextquestion.id %}">Continue survey</a>
+        {% else %}
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="submit" name="participate" value="Take survey" />
+            </form>
+        {% endif %}
     {% endif %}
 </body>
 </html>

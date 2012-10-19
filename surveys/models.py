@@ -66,6 +66,18 @@ class Survey(models.Model):
     def slug(self):
         return slugify(self.title)
 
+    def end(self):
+        try:
+            self.endtime = datetime.datetime.now()
+            super(Survey, self).save()
+
+            for surveyee in self.surveyee_set.all().filter(endtime=None):
+                surveyee.endtime = datetime.datetime.now()
+                surveyee.save()
+        except:
+            return False
+        return True
+
 class Question(models.Model):
     # question types
     TYPE_RADIO = 1
