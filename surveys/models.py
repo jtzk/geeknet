@@ -2,6 +2,7 @@ import datetime
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Max
 
 class Survey(models.Model):
     # status types
@@ -46,11 +47,31 @@ class Survey(models.Model):
         return self.title
 
     def results(self):
-        results = {"timesAttempted":0, "numberQuestions":0, "totalVotes":0,}
+        results = {}
 
         results["numberQuestions"] = self.question_set.all().count
         #results["totalVotes"] += self.question_set.all().aggregate(tvotes=Sum('choice__votes'))['tvotes']
-        results["participants"] = self.surveyee_set.all().count
+        results["participants"] = self.participants
+
+        # get longest time taken to complete survey
+        if self.participants > 0:
+            totalDuration = shortestDuration = longestDuration = datetime.timedelta()
+            for surveyee in self.surveyee_set.all():
+                duration = surveyee.endtime - surveyee.starttime
+
+                totalDuration += duration
+
+                if duration < shortestDuration:
+                    shortestDuration = duration
+                elif shortestDuration.seconds == 0:
+                    shortestDuration = duration
+
+                if duration > longestDuration:
+                    longestDuration = duration
+
+            results["longest"] = timedelta_to_time(longestDuration)
+            results["shortest"] = timedelta_to_time(shortestDuration)
+            results["average"] = timedelta_to_time(longestDuration/self.surveyee_set.all().count())
 
         return results
 
@@ -71,12 +92,19 @@ class Survey(models.Model):
             self.endtime = datetime.datetime.now()
             super(Survey, self).save()
 
-            for surveyee in self.surveyee_set.all().filter(endtime=None):
-                surveyee.endtime = datetime.datetime.now()
-                surveyee.save()
+            self.surveyee_set.all().filter(endtime=None).delete()
+
         except:
             return False
         return True
+
+def timedelta_to_time(d):
+    if d.seconds < 60:
+        return "%d second(s)" % d.seconds
+    if d.seconds < 3600:
+        return "%d minute(s)" % (d.seconds/60)
+    if d.seconds < 86400:
+        return "%d hour(s)" % (d.seconds/3600)
 
 class Question(models.Model):
     # question types
