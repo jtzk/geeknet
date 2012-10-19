@@ -10,6 +10,8 @@ from django.utils.http import urlquote, base36_to_int
 from django.contrib.sites.models import Site, RequestSite
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
+from surveys.models import Survey
+from django.utils import timezone
 
 
 @csrf_protect
@@ -74,7 +76,18 @@ def accounthome(request):
     else:
         return render_to_response('accounts/accounthome.html')
 
-@login_required
+
 def profile(request):
-    return render_to_response('accounts/profile.html' , RequestContext(request))
+
+    active_survey_list = Survey.objects.filter(status=Survey.STATUS_ACTIVE).order_by('id')
+    if request.user.is_authenticated():
+        user_survey_list = Survey.objects.filter(owner=request.user).exclude(status=Survey.STATUS_INACTIVE).order_by('endtime')
+        for survey in user_survey_list:
+            if survey.endtime <= timezone.now():
+                survey.status = survey.STATUS_ENDED
+                survey.save()
+        return render_to_response('accounts/profile.html', {'active_survey_list': active_survey_list, 'user_survey_list': user_survey_list,}, RequestContext(request))
+
+    return render_to_response('accounts/profile.html', {'active_survey_list': active_survey_list,}, RequestContext(request))
+
 

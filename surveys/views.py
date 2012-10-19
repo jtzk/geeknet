@@ -108,11 +108,14 @@ def question(request, survey_id, question_id):
 
 def results(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
-    statistics = s.results()
-    if s.resultDisplay == s.RESULTS_PUBLIC or (s.resultDisplay == s.RESULTS_USER and request.user.is_authenticated()) or (s.resultDisplay == s.RESULTS_PRIVATE and request.user == s.owner):
-        return render_to_response('surveys/results/results.html', {'survey': s, 'statistics': statistics}, RequestContext(request))
-    else:
-        return render_to_response('surveys/results/error.html', {'survey': s,})
+    if s.status == s.STATUS_ENDED:
+        statistics = s.results()
+        if s.resultDisplay == s.RESULTS_PUBLIC or (s.resultDisplay == s.RESULTS_USER and request.user.is_authenticated()) or (s.resultDisplay == s.RESULTS_PRIVATE and request.user == s.owner):
+            return render_to_response('surveys/results/results.html', {'survey': s, 'statistics': statistics}, RequestContext(request))
+        else:
+            return render_to_response('surveys/results/error.html', {'survey': s,})
+
+    return HttpResponseRedirect(reverse('surveys.views.index'))
 
 def vote(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
