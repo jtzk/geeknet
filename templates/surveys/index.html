@@ -84,5 +84,13 @@
                     {% endfor %}
             {% endif %}
         {% endif %}
+
+
+        {% if user.is_authenticated %}
+            <h2>Profile Page:</h2>
+            <p><a href="{% url accounts.views.profile %}">Go to profile</a></p>
+        {% else %}
+            <p><a href="{% url accounts.views.accounthome %}">Login</a> to create a survey</p>
+        {% endif %}
     </body>
 </html>
