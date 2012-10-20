@@ -56,7 +56,7 @@ class Survey(models.Model):
         # get longest time taken to complete survey
         if self.participants > 0:
             totalDuration = shortestDuration = longestDuration = datetime.timedelta()
-            for surveyee in self.surveyee_set.all():
+            for surveyee in self.surveyee_set.all().exclude(endtime=None):
                 duration = surveyee.endtime - surveyee.starttime
 
                 totalDuration += duration
@@ -74,6 +74,23 @@ class Survey(models.Model):
             results["average"] = timedelta_to_time(longestDuration/self.surveyee_set.all().count())
 
         return results
+
+    def publish(self, resultDisplay=RESULTS_PUBLIC, endtime=datetime.date.today()+datetime.timedelta(days=3)):
+        if not self.status == self.STATUS_PUBLISHED:
+            if any(int(resultDisplay) == r[0] for r in self.RESULTS_CHOICES):
+                self.resultDisplay = int(resultDisplay)
+            else:
+                self.resultDisplay = self.RESULTS_PUBLIC
+            if self.starttime == None:
+                self.starttime = datetime.datetime.now()
+            if endtime.date() <= datetime.date.today():
+                self.endtime = datetime.date.today()+datetime.timedelta(days=3)
+            else:
+                self.endtime = endtime
+            self.status = self.STATUS_PUBLISHED
+            self.save()
+            return True
+        return False
 
     @property
     def numQuestions(self):

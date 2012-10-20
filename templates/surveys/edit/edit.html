@@ -40,10 +40,16 @@
         div.buttons p.button { border:1px solid #0af; }
         div.buttons p.button a { line-height:25px; text-decoration:none; width:130px; display:block; background:#0bf; color:#fff }
         div.buttons input:hover { cursor:pointer }
+        div.buttons p.results { border-color:#2b2; }
+        div.buttons p.results a { background:#3c3; }
         input.submit { border:1px solid #6b6; background:#7c7; color:#fff }
         input.reset, input.delete { border:1px solid #b66; background:#c77; color:#fff }
         input.reset { margin-left:50px }
         div.ui-datepicker{ font-size:12px; }
+        {% if user.is_superuser %}
+            .menu { list-style-type:none; padding:0 }
+            .menu li { margin:10px 0 }
+        {% endif %}
     </style>
 </head>
 <body>
@@ -137,20 +143,33 @@
                 <input class="submit" name="apply" type="submit" value="Apply Changes" /><input class="reset" type="reset" value="Reset" />
                 <p class="hint">Hint: You may also use the "Enter" key to apply changes</p>
             {% endif %}
-            <p class="button"><a href="{% if survey.status == survey.STATUS_PUBLISHED %}{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}{% else %}{% url surveys.views.index %}{% endif %}">Done Editing</a></p>
             {% if survey.status == survey.STATUS_PUBLISHED %}
-                <input class="end" name="end" type="submit" value="End Survey" />
-            {% elif survey.status == survey.STATUS_ACTIVE %}
+                <p class="button results"><a href="{% url surveys.views.results survey_id=survey.id %}">View Results</a></p>
+                {% if survey.owner == request.user %}
+                    <input class="end" name="end" type="submit" value="End Survey" />
+                {% endif %}
+                <p class="button"><a href="{% if survey.status == survey.STATUS_PUBLISHED %}{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}{% else %}{% url surveys.views.index %}{% endif %}">Done Editing</a></p>
+            {% endif %}
+            {% if survey.status == survey.STATUS_ACTIVE %}
                 <h2>Survey Settings</h2>
                 <p>Results shown to:</p>
                 {% for i, k in survey.RESULTS_CHOICES %}
-                    <p class="resultDisplay"><input type="radio" name="resultDisplay" value="{{ i }}" id="option{{ i }}" {% if i == survey.RESULTS_PUBLIC %}checked="checked"{% endif %}/><label for="option{{ i }}">{{ k }}</label></p>
+                    <p class="resultDisplay"><input type="radio" name="resultDisplay" value="{{ i }}" id="option{{ i }}" {% if i == survey.resultDisplay %}checked="checked"{% endif %}/><label for="option{{ i }}">{{ k }}</label></p>
                 {% endfor %}
-                <p>End date: <input type="text" class="datePicker" name="endtime" value="{{ tomorrow|date:"d/m/Y" }}" /></p>
+                <p>End date: <input type="text" class="datePicker" name="endtime" value="{% if survey.endtime %}{{ survey.endtime|date:"d/m/Y" }}{% else %}{{ tomorrow|date:"d/m/Y" }}{% endif %}" /></p>
                 <p><input type="submit" name="publish" value="Publish" /></p>
             {% endif %}
             {% if user.is_superuser %}
                 <h2>Superuser Stuff</h2>
+                <ul class="menu">
+                {% if survey.status == survey.STATUS_PUBLISHED %}
+                    <li><input class="button" name="unpublish" type="submit" value="Unpublish Survey" /></li>
+                    <li><input class="button" name="end" type="submit" value="End Survey" /></li>
+                {% endif %}
+                    <li><input class="button" name="{% if survey.status == survey.STATUS_INACTIVE %}un{% endif %}delete" type="submit" value="{% if survey.status == survey.STATUS_INACTIVE %}Undelete{% else %}Delete{% endif %} Survey" /></li>
+                    <li><input class="button" name="ban" type="submit" value="Ban {{ survey.owner }}" /></li>
+                    <li><p class="button"><a href="{% url surveys.views.index %}">Done</a></p></li>
+                </ul>
             {% endif %}
         </div>
     </form>

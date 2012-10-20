@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Results</title>
 </head>
 <body>
-    <p><strong>This survey's results is {{ survey.get_resultDisplay_display }}</strong></p>
+    <p><strong>You are not allowed to view the results of this survey.</strong></p>
+    <p><a href="{% url surveys.views.index %}">Back to main</a></p>
 </body>
 </html>

@@ -54,6 +54,16 @@
                     {% for survey in active_survey_list %}
                         <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> created <strong>{{ survey.created|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
                     {% endfor %}
+                {% else %}
+                    <p>No surveys.</p>
+                {% endif %}
+                <h2>Deleted surveys:</h2>
+                {% if deleted_survey_list %}
+                    {% for survey in deleted_survey_list %}
+                        <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> created <strong>{{ survey.created|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
+                    {% endfor %}
+                {% else %}
+                    <p>No surveys.</p>
                 {% endif %}
             {% else %}
                 <h2>Your surveys:</h2>

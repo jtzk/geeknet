@@ -8,13 +8,17 @@ from django.template import RequestContext
 from django.db.models import Count, Q
 from surveys.forms import SurveyCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     latest_survey_list = Survey.objects.all().filter(status=Survey.STATUS_PUBLISHED).filter(endtime__gt=timezone.now()).order_by('-starttime')[:5]
     popular_survey_list = Survey.objects.filter(status=Survey.STATUS_PUBLISHED).filter(endtime__gt=timezone.now()).annotate(surveyParticipants=Count('surveyee')).order_by('-surveyParticipants').filter(surveyParticipants__gte=1)[:5]
     all_survey_list = Survey.objects.filter(status=Survey.STATUS_PUBLISHED).filter(endtime__gt=timezone.now()).order_by('id')
     active_survey_list = Survey.objects.filter(status=Survey.STATUS_ACTIVE).order_by('id')
+    deleted_survey_list = Survey.objects.filter(status=Survey.STATUS_INACTIVE)
     recently_ended_survey_list = Survey.objects.filter(Q(status=Survey.STATUS_ENDED) | Q(endtime__lte=timezone.now())).order_by('-endtime')[:5]
+    if request.user.is_superuser:
+        return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list, 'recently_ended_survey_list': recently_ended_survey_list, 'deleted_survey_list': deleted_survey_list}, RequestContext(request))
     if request.user.is_authenticated():
         user_survey_list = Survey.objects.filter(owner=request.user).exclude(status=Survey.STATUS_INACTIVE).order_by('endtime')
         for survey in user_survey_list:
@@ -23,7 +27,6 @@ def index(request):
                     survey.status = survey.STATUS_ENDED
                     survey.save()
         return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list, 'user_survey_list': user_survey_list, 'recently_ended_survey_list': recently_ended_survey_list}, RequestContext(request))
-
     return render_to_response('surveys/index.html', {'all_survey_list': all_survey_list, 'latest_survey_list': latest_survey_list, 'popular_survey_list': popular_survey_list, 'active_survey_list': active_survey_list, 'recently_ended_survey_list': recently_ended_survey_list}, RequestContext(request))
 
 def detail(request, survey_id, slug):
@@ -108,7 +111,7 @@ def question(request, survey_id, question_id):
 
 def results(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
-    if s.status == s.STATUS_ENDED:
+    if not s.status == s.STATUS_ACTIVE and not s.status == s.STATUS_INACTIVE:
         statistics = s.results()
         if s.resultDisplay == s.RESULTS_PUBLIC or (s.resultDisplay == s.RESULTS_USER and request.user.is_authenticated()) or (s.resultDisplay == s.RESULTS_PRIVATE and request.user == s.owner):
             return render_to_response('surveys/results/results.html', {'survey': s, 'statistics': statistics}, RequestContext(request))
@@ -149,6 +152,7 @@ def vote(request, survey_id):
 
     return HttpResponseRedirect(reverse('surveys.views.results', args=(s.id,)))
 
+@login_required
 def create(request):
     if request.user.is_authenticated() and request.method == "POST":
         form = SurveyCreationForm(request.POST)
@@ -163,8 +167,10 @@ def create(request):
 
 def edit(request, survey_id):
     s = get_object_or_404(Survey, pk=survey_id)
+    # only admins and survey owner can view this page
     if request.user.is_superuser or (request.user.is_authenticated() and s.owner == request.user):
         if request.method == "POST":
+            # editing is only allowed when survey status is 'ACTIVE'
             if s.status == s.STATUS_ACTIVE:
                 for k, v in request.POST.items():
                     if k.startswith("surveyTitle"):
@@ -208,16 +214,10 @@ def edit(request, survey_id):
                             q.type = 1
                         q.save()
                 if 'publish' in request.POST:
-                    s.status = s.STATUS_PUBLISHED
-                    if 'resultDisplay' in request.POST:
-                        s.resultDisplay = int(request.POST["resultDisplay"])
-                    if 'endtime' in request.POST:
-                        if dateutil.parser.parse(request.POST["endtime"]) >= datetime.datetime.now():
-                            s.endtime = dateutil.parser.parse(request.POST["endtime"])
-                            s.starttime = timezone.now()
-                            s.save()
-                        else:
+                    if 'resultDisplay' in request.POST and 'endtime' in request.POST:
+                        if not s.publish(resultDisplay=request.POST["resultDisplay"], endtime=dateutil.parser.parse(request.POST["endtime"])):
                             return HttpResponseRedirect(reverse('surveys.views.edit', args=(s.id,)))
+            # actions for published surveys
             elif s.status == s.STATUS_PUBLISHED:
                 if "end" in request.POST:
                     ACTION_CONFIRM = 0
@@ -229,6 +229,20 @@ def edit(request, survey_id):
                         return HttpResponseRedirect(reverse('surveys.views.edit', args=(s.id,)))
                     else:
                         return render_to_response('surveys/edit/end.html', {'survey': s, 'action': ACTION_CONFIRM}, context_instance=RequestContext(request))
+                if "unpublish" in request.POST:
+                    if request.user.is_superuser:
+                        s.status = s.STATUS_ACTIVE
+                        s.save()
+            elif s.status == s.STATUS_INACTIVE:
+                if "undelete" in request.POST:
+                    if request.user.is_superuser:
+                        s.status = s.STATUS_ACTIVE
+                        s.save()
+            if not s.status == s.STATUS_INACTIVE:
+                if "delete" in request.POST:
+                    if request.user.is_superuser:
+                        s.status = s.STATUS_INACTIVE
+                        s.save()
             return HttpResponseRedirect(reverse('surveys.views.edit', args=(s.id,)))
         return render_to_response('surveys/edit/edit.html', {'survey': s, 'today':datetime.datetime.now(), 'tomorrow': datetime.datetime.now() + datetime.timedelta(days=1)}, context_instance=RequestContext(request))
     else:
