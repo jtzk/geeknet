@@ -77,8 +77,8 @@ def accounthome(request):
         return render_to_response('accounts/accounthome.html')
 
 
-def profile(request):
 
+def profile(request):
     active_survey_list = Survey.objects.filter(status=Survey.STATUS_ACTIVE).order_by('id')
     if request.user.is_authenticated():
         user_survey_list = Survey.objects.filter(owner=request.user).exclude(status=Survey.STATUS_INACTIVE).order_by('endtime')
@@ -86,6 +86,7 @@ def profile(request):
             if survey.endtime <= timezone.now():
                 survey.status = survey.STATUS_ENDED
                 survey.save()
+
         return render_to_response('accounts/profile.html', {'active_survey_list': active_survey_list, 'user_survey_list': user_survey_list,}, RequestContext(request))
 
     return render_to_response('accounts/profile.html', {'active_survey_list': active_survey_list,}, RequestContext(request))

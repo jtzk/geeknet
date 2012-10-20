@@ -2,30 +2,55 @@
 {% load humanize %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <h1 xmlns="http://www.w3.org/1999/html">Welcome, {{ user.get_full_name }} to geeknet iNTUsurvey</h1>
-        <h2>User's Profile</h2>
-        <p><b>Username:</b> {{ user.username }}</p>
-        <p><b>Name:</b> {{ user.first_name }} {{ user.last_name }}</p>
-        <p><b>Birthday:</b> {{ user.birthday }}</p>
-        <p><b>Email:</b> {{ user.email }}</p>
-        <p><b>Change Account Settings:</b> <a href="{% url django.contrib.auth.views.password_change %}">Change Password</a></p>
-        <p><a href="/">View all surveys</a></p>
 
-        {% if user.is_superuser %}
-            <h2>Unpublished surveys:</h2>
-            {% if active_survey_list %}
-                {% for survey in active_survey_list %}
-                    <p><a href="{% url surveys.views.detail survey_id=survey.id %}">{{ survey.title }}</a> created <strong>{{ survey.created|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
-                {% endfor %}
-            {% endif %}
-        {% else %}
-            <h2>Your surveys:</h2>
-            {% for survey in user_survey_list %}
-                <p><a href="{% if survey.status == survey.STATUS_ACTIVE %}{% url surveys.views.edit survey_id=survey.id %}{% elif survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}{% else %}{% url surveys.views.detail survey_id=survey.id %}{% endif %}">{{ survey.title }}</a> [<strong>{{ survey.get_status_display }}</strong>]{% if survey.status == survey.STATUS_PUBLISHED %} {{ survey.get_resultDisplay_display }}, ends <strong>{{ survey.endtime|naturaltime }}</strong>{% endif %}</p>
-            {% endfor %}
+    <title>iNTUSurvey</title>
+    <style type="text/css">
+        .survey h3 { font:normal 12px Verdana; margin-left:1.3em }
+        .survey ul { font:normal 11px Verdana; list-style-type:none; }
+        .survey ul li { padding:0.2em 0 }
+        .survey li.label { float:left; width:90px }
+        .survey li.text { font-weight:bold }
+
+       .survey p.profile {margin-left:1em}
+    </style>
+
+    {% if user.is_authenticated %}
+        <h1 xmlns="http://www.w3.org/1999/html">Welcome to Geeknet iNTUsurvey</h1>
+        <h2>User's Profile</h2>
+        <div class="survey">
+            <p class="profile"><b>Username:</b> {{ user.username }}</p>
+            <p class="profile"><b>Name:</b> {{ user.get_full_name }}</p>
+            <p class="profile"><b>Birthday:</b> {{ user.birthday }}</p>
+            <p class="profile"><b>Email:</b> {{ user.email }}</p>
+            <p class="profile"><b>Change Account Settings:</b> <a href="{% url django.contrib.auth.views.password_change %}">Change Password</a></p>
+            <p class="profile"><b>Survey Directory: </b><a href="/">View</a></p>
+        </div>
+
+        {% if user_survey_list.count != 0 %}
+            <h2>Created Surveys</h2>
         {% endif %}
+
+        {% for survey in user_survey_list %}
+
+            <div class="survey">
+                <h3><a href="{%if survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}{% else %}{% url surveys.views.edit survey_id=survey.id %}{% endif %}">{{ survey.title }}</a></h3>
+                <ul>
+                    <li class="label">Status:</li><li class="text">{{ survey.get_status_display }}</li>
+                    <li class="label">Questions:</li><li class="text">{{ survey.numQuestions }}</li>
+                    {% if survey.status == survey.STATUS_PUBLISHED %}
+                        <li class="label">Participants:</li><li class="text">{{ survey.participants }}</li>
+                        <li class="label">Results:</li><li class="text">{{ survey.get_resultDisplay_display }}</li>
+                        <li class="label">Time started:</li><li class="text">{{ survey.starttime|naturaltime }}</li>
+                        <li class="label">Time left:</li><li class="text">{{ survey.endtime|naturaltime }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endfor %}
+
     {% else %}
         <p><a href="{% url accounts.views.accounthome %}">Login</a> to create a survey</p>
     {% endif %}
+
 {% endblock %}
+
+
