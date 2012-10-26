@@ -15,3 +15,6 @@ class QuestionForm(forms.ModelForm):
             'type': forms.RadioSelect(),
             }
         exclude = ('survey',)
+
+class SearchForm(forms.Form):
+    title = forms.CharField(required=False, max_length=100, help_text="Search by Title")

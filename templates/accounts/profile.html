@@ -1,56 +1,161 @@
-{% extends 'accounts/base.html' %}
+{% extends "base.html" %}
+
 {% load humanize %}
 
-{% block content %}
+{% block extrahead %}
 
-    <title>iNTUSurvey</title>
-    <style type="text/css">
-        .survey h3 { font:normal 12px Verdana; margin-left:1.3em }
-        .survey ul { font:normal 11px Verdana; list-style-type:none; }
-        .survey ul li { padding:0.2em 0 }
-        .survey li.label { float:left; width:90px }
-        .survey li.text { font-weight:bold }
+    <style type="text/css" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 
-       .survey p.profile {margin-left:1em}
+
+        .survey-container {
+            border: 2px solid #2f2f2f;
+            -webkit-border-radius: 19px;
+            -moz-border-radius: 19px;
+            border-radius: 19px;
+            -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            text-decoration: none;
+            padding-bottom:20px;
+        }
+
+        #survey-row
+        {
+            line-height: 20px;
+            background-color: #1e1e1e;
+        }
+
+        .survey
+        {
+            color: #cbcbcb;
+            font-weight: bold;
+            text-decoration: none;
+            margin-right: 10px;
+            border-bottom: 1px dashed #DD0000;
+        }
+
+        .surveydetails
+        {
+            color: #cbcbcb;
+            background-color: #202020;
+            float: none;
+            list-style-type:none;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            text-shadow: #404040 0 1px 0;
+        }
+
+        @media handheld, only screen and (max-width: 767px) {
+
+        }
+
     </style>
-
-    {% if user.is_authenticated %}
-        <h1 xmlns="http://www.w3.org/1999/html">Welcome to Geeknet iNTUsurvey</h1>
-        <h2>User's Profile</h2>
-        <div class="survey">
-            <p class="profile"><b>Username:</b> {{ user.username }}</p>
-            <p class="profile"><b>Name:</b> {{ user.get_full_name }}</p>
-            <p class="profile"><b>Birthday:</b> {{ user.birthday }}</p>
-            <p class="profile"><b>Email:</b> {{ user.email }}</p>
-            <p class="profile"><b>Change Account Settings:</b> <a href="{% url django.contrib.auth.views.password_change %}">Change Password</a></p>
-            <p class="profile"><b>Survey Directory: </b><a href="/">View</a></p>
-        </div>
-
-        {% if user_survey_list.count != 0 %}
-            <h2>Created Surveys</h2>
-        {% endif %}
-
-        {% for survey in user_survey_list %}
-
-            <div class="survey">
-                <h3><a href="{%if survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}{% else %}{% url surveys.views.edit survey_id=survey.id %}{% endif %}">{{ survey.title }}</a></h3>
-                <ul>
-                    <li class="label">Status:</li><li class="text">{{ survey.get_status_display }}</li>
-                    <li class="label">Questions:</li><li class="text">{{ survey.numQuestions }}</li>
-                    {% if survey.status == survey.STATUS_PUBLISHED %}
-                        <li class="label">Participants:</li><li class="text">{{ survey.participants }}</li>
-                        <li class="label">Results:</li><li class="text">{{ survey.get_resultDisplay_display }}</li>
-                        <li class="label">Time started:</li><li class="text">{{ survey.starttime|naturaltime }}</li>
-                        <li class="label">Time left:</li><li class="text">{{ survey.endtime|naturaltime }}</li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endfor %}
-
-    {% else %}
-        <p><a href="{% url accounts.views.accounthome %}">Login</a> to create a survey</p>
-    {% endif %}
 
 {% endblock %}
 
+
+{% block content %}
+
+    <div id="wrap">
+
+        <div id="main">
+
+            <div class="container">
+                <div class="row">
+                    <div class="sixcol">
+                        <p class="logo" style="background-color: transparent;">
+                            <a href='/'><img src="/static/media/logo.png"></a>
+                        </p>
+                    </div>
+
+                    <div class="sixcol last">
+                        <p class="login" style="background-color: transparent;">
+                                User profile of <b>{{ user.username }}</b>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <p style="margin-top: 0px; background-color: transparent;">
+                            <a href='' ><img src="/static/media/aboutButton.png"></a>
+                            <a href=''><img src="/static/media/contactButton.png"></a>
+                            {% if user.is_authenticated %}
+                                <a href='/accounts/profile'><img src="/static/media/profileButton.png"></a>
+                                <a href='/surveys/create'><img src="/static/media/createButton.png"></a>
+                                <a href='/admin'><img src="/static/media/adminButton.png"></a>
+                                <a href='/accounts/logout'><img src="/static/media/logoutButton.png"></a>
+                            {% else %}
+                                <a href='/accounts/login/' ><img src="/static/media/loginButton.png"></a>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="fourcol">
+                        <p style="margin-top: 0px; background-color: transparent; line-height: 20px;">
+                            <b>Name:</b> {{ user.get_full_name }}
+                        </p>
+                    </div>
+
+                    <div class="fourcol">
+                        <p style="margin-top: 0px; background-color: transparent; line-height: 20px;">
+                            <b>Birthday:</b> {{ user.birthday }}
+                        </p>
+                    </div>
+
+                    <div class="fourcol last">
+                        <p style="margin-top: 0px; background-color: transparent;  line-height: 20px; margin-bottom: 20px;">
+                            <b>E-Mail:</b> {{ user.email }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <div class="survey-container">
+
+                            <p style="line-height:0px; background-color: transparent;">
+                                <img src="/static/media/surveyHead.png">
+                            </p>
+
+                            {% if survey_list %}
+                                {% for survey in survey_list %}
+
+                                    <p id="survey-row">
+                                        <a href="{%if survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}{% else %}{% url surveys.views.edit survey_id=survey.id %}{% endif %}" class="survey">{{ survey.title }}</a>
+                                        <ul class="surveydetails">
+                                            <li>Status: <b>{{ survey.get_status_display }}</b></li>
+                                            {% if survey.status == survey.STATUS_PUBLISHED %}
+                                                <li >Survey Start: <b>{{ survey.starttime|naturaltime }}</b></li>
+                                                <li >Survey End: <b>{{ survey.endtime|naturaltime }}</b></li>
+                                            {% endif %}
+                                        </ul>
+                                    </p>
+
+                                {% endfor %}
+                            {% else %}
+                                <p id="survey-row">No surveys are available.</p>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
 

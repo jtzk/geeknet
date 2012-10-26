@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -9,7 +10,6 @@ from django.conf import settings
 from django.utils.http import urlquote, base36_to_int
 from django.contrib.sites.models import Site, RequestSite
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.decorators import login_required
 from surveys.models import Survey
 from django.utils import timezone
 
@@ -70,25 +70,17 @@ def signup_complete(request, template_name='registration/signup_complete.html'):
         context_instance=RequestContext(request,
             {'login_url': settings.LOGIN_URL}))
 
-def accounthome(request):
-    if request.user.is_authenticated():
-        return render_to_response('accounts/profile.html' , RequestContext(request))
-    else:
-        return render_to_response('accounts/accounthome.html')
-
-
-
+@login_required
 def profile(request):
-    active_survey_list = Survey.objects.filter(status=Survey.STATUS_ACTIVE).order_by('id')
     if request.user.is_authenticated():
-        user_survey_list = Survey.objects.filter(owner=request.user).exclude(status=Survey.STATUS_INACTIVE).order_by('endtime')
+        user_survey_list = Survey.objects.filter(owner=request.user).exclude(status=Survey.STATUS_INACTIVE).order_by('starttime' , 'status').reverse()
         for survey in user_survey_list:
-            if survey.endtime <= timezone.now():
+
+            if (survey.endtime != None) and (survey.endtime <= timezone.now()):
                 survey.status = survey.STATUS_ENDED
                 survey.save()
 
-        return render_to_response('accounts/profile.html', {'active_survey_list': active_survey_list, 'user_survey_list': user_survey_list,}, RequestContext(request))
+        return render_to_response('accounts/profile.html', {'survey_list': user_survey_list,}, RequestContext(request))
 
-    return render_to_response('accounts/profile.html', {'active_survey_list': active_survey_list,}, RequestContext(request))
 
 

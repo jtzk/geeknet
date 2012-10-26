@@ -1,8 +1,70 @@
-{% extends "accounts/base.html" %}
+{% extends "base.html" %}
+
+{% block extrahead %}
+
+    <style type="text/css" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+        .logoutcontainer {
+            border: 2px solid #2f2f2f;
+            -webkit-border-radius: 19px;
+            -moz-border-radius: 19px;
+            border-radius: 19px;
+            -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+{% endblock %}
 
 {% block content %}
 
-    <p>You have been logged out.</p>
-    <a href="{% url django.contrib.auth.views.login %}">Login again</a>
+    <div id="wrap">
+
+        <div id="main">
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <p class="logo" style="background-color: transparent;">
+                            <a href='/'><img src="/static/media/logo.png"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <p style="margin-top: 0px; background-color: transparent;">
+                            <a href='/' ><img src="/static/media/backButton.png"></a>
+                            <a href='/accounts/login'><img src="/static/media/loginButton2.png"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <div class="logoutcontainer">
+                            <p style="line-height:20px; background-color: transparent; padding-bottom: 20px;">
+                                You have been logged out of iNTU Survey.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
 
 {% endblock %}

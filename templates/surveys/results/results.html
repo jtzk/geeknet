@@ -17,6 +17,15 @@
     <h2>Statistics</h2>
     <p>Number of questions: <strong>{{ statistics.numberQuestions }}</strong></p>
     <p>Participants: <strong>{{ statistics.participants }}</strong></p>
+
+    <p>IP List:</p>
+    <ul>
+        {% for surveyee in survey.surveyee_set.all %}
+            <li><p>{{ surveyee.ip }} : {{ surveyee.user.get_full_name }}</p></li>
+        {% endfor %}
+    </ul>
+
+
     <p>Shortest time taken: <strong>{{ statistics.shortest }}</strong></p>
     <p>Longest time taken: <strong>{{ statistics.longest }}</strong></p>
     <p>Average time taken: <strong>{{ statistics.average }}</strong></p>

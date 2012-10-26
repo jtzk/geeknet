@@ -1,0 +1,87 @@
+/* ============================== */
+/* ! Layout for desktop version   */
+/* ============================== */
+
+* {margin:0;padding:0;}
+
+.logo
+{
+    float:left;
+}
+
+.login
+{
+    float: right;
+}
+
+
+
+html, body {height: 100%;}
+
+#wrap {min-height: 100%;}
+
+#main {overflow:auto;
+    padding-bottom: 20px;}
+
+#footer {position: relative;
+    margin-top: -20px;
+    height: 20px;
+    clear:both;}
+
+/*Opera Fix*/
+body:before {
+    content:"";
+    height:100%;
+    float:left;
+    width:0;
+    margin-top:-32767px;
+}
+
+
+/* IMPORTANT
+<!--[if !IE 7]>
+	<style type="text/css">
+		#wrap {display:table;height:100%}
+	</style>
+<![endif]-->
+
+/* ============================= */
+/* ! Layout for mobile version   */
+/* ============================= */
+
+@media handheld, only screen and (max-width: 767px) {
+
+	body {
+		
+	}
+
+    .logo
+    {
+        float:none;
+        margin-top: 0px;
+        background-color: transparent;
+        padding-top: 5px;
+    }
+
+    .login
+    {
+        float: none;
+        background-color: transparent;
+        color: #cbcbcb;
+    }
+
+}
+
+
+/* ========================================== */
+/* ! Provide higher res assets for iPhone 4   */
+/* ========================================== */
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) { 
+
+/*	.logo {
+		background: url(logo2x.jpg) no-repeat;
+		background-size: 212px 303px;
+	}*/
+
+}

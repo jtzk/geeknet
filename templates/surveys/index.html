@@ -1,96 +1,176 @@
+{% extends "base.html" %}
+
 {% load humanize %}
-<html>
-    <head>
-        <title>iNTUSurvey</title>
-        <style type="text/css">
-            .survey h3 { font:normal 12px Verdana; margin-left:2em }
-            .survey ul { font:normal 11px Verdana; list-style-type:none; }
-            .survey ul li { padding:0.2em 0 }
-            .survey li.label { float:left; width:90px }
-            .survey li.text { font-weight:bold }
-        </style>
-    </head>
-    <body>
-        <h1>Surveys</h1>
-        {% if user.is_authenticated %}
-            <p>Hi, {{ user.username }}. <a href="{% url surveys.views.create %}">Create a new survey</a></p>
-        {% else %}
-            <p><a href="{% url accounts.views.accounthome %}">Login</a> to create a survey</p>
-        {% endif %}
-        <h2>Newest surveys:</h2>
-        {% if latest_survey_list %}
-            {% for survey in latest_survey_list %}
-                <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> published <strong>{{ survey.starttime|naturaltime }}</strong></p>
-            {% endfor %}
-        {% else %}
-            <p>No surveys are available.</p>
-        {% endif %}
-        <h2>Popular surveys:</h2>
-        {% if popular_survey_list %}
-            {% for survey in popular_survey_list %}
-                <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> <strong>{{ survey.participants }} participants</strong></p>
-            {% endfor %}
-        {% else %}
-            <p>No surveys are available.</p>
-        {% endif %}
-        <h2>Recently ended surveys:</h2>
-        {% if recently_ended_survey_list %}
-            {% for survey in recently_ended_survey_list %}
-                <p><a href="{% url surveys.views.results survey_id=survey.id %}">{{ survey.title }}</a> <strong>{{ survey.participants }} participants</strong>, ended <strong>{{ survey.endtime|naturaltime }}</strong></p>
-            {% endfor %}
-        {% endif %}
-        <h2>All surveys:</h2>
-        {% if all_survey_list %}
-            {% for survey in all_survey_list %}
-                <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> by <strong>{{ survey.owner.get_full_name }}</strong></p>
-            {% endfor %}
-        {% else %}
-            <p>No surveys are available.</p>
-        {% endif %}
-        {% if user.is_authenticated %}
-            {% if user.is_superuser %}
-                <h2>Unpublished surveys:</h2>
-                {% if active_survey_list %}
-                    {% for survey in active_survey_list %}
-                        <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> created <strong>{{ survey.created|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
-                    {% endfor %}
-                {% else %}
-                    <p>No surveys.</p>
-                {% endif %}
-                <h2>Deleted surveys:</h2>
-                {% if deleted_survey_list %}
-                    {% for survey in deleted_survey_list %}
-                        <p><a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}">{{ survey.title }}</a> created <strong>{{ survey.created|naturaltime }}</strong> by <strong>{{ survey.owner.get_full_name }}</strong></p>
-                    {% endfor %}
-                {% else %}
-                    <p>No surveys.</p>
-                {% endif %}
-            {% else %}
-                <h2>Your surveys:</h2>
-                    {% for survey in user_survey_list %}
-                        <div class="survey">
-                            <h3><a href="{%if survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}{% else %}{% url surveys.views.edit survey_id=survey.id %}{% endif %}">{{ survey.title }}</a></h3>
-                            <ul>
-                                <li class="label">Status:</li><li class="text">{{ survey.get_status_display }}</li>
-                                <li class="label">Questions:</li><li class="text">{{ survey.numQuestions }}</li>
-                                {% if survey.status == survey.STATUS_PUBLISHED %}
-                                    <li class="label">Participants:</li><li class="text">{{ survey.participants }}</li>
-                                    <li class="label">Results:</li><li class="text">{{ survey.get_resultDisplay_display }}</li>
-                                    <li class="label">Time started:</li><li class="text">{{ survey.starttime|naturaltime }}</li>
-                                    <li class="label">Time left:</li><li class="text">{{ survey.endtime|naturaltime }}</li>
+
+{% block extrahead %}
+
+    <style type="text/css" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+
+        .survey-container {
+            border: 2px solid #2f2f2f;
+            -webkit-border-radius: 19px;
+            -moz-border-radius: 19px;
+            border-radius: 19px;
+            -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            text-decoration: none;
+            padding-bottom:20px;
+        }
+
+        #survey-row
+        {
+            line-height: 20px;
+            background-color: #1e1e1e;
+        }
+
+        .survey
+        {
+            color: #cbcbcb;
+            font-weight: bold;
+            text-decoration: none;
+            margin-right: 10px;
+            border-bottom: 1px dashed #DD0000;
+        }
+
+        @media handheld, only screen and (max-width: 767px) {
+
+        }
+
+    </style>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div id="wrap">
+
+        <div id="main">
+
+            <div class="container">
+                <div class="row">
+                    <div class="sixcol">
+                        <p class="logo" style="background-color: transparent;">
+                            <a href='/'><img src="/static/media/logo.png"></a>
+                        </p>
+                    </div>
+
+                    <div class="sixcol last">
+                        <p class="login" style="background-color: transparent;">
+                            {% if user.is_authenticated %}
+                                Welcome, {{ user.username }}.
+                            {% else %}
+                                Hello, Guest.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <p style="margin-top: 0px; background-color: transparent;">
+                            <a href='' ><img src="/static/media/aboutButton.png"></a>
+                            <a href=''><img src="/static/media/contactButton.png"></a>
+                            {% if user.is_authenticated %}
+                                <a href='/accounts/profile'><img src="/static/media/profileButton.png"></a>
+                                <a href='/surveys/create'><img src="/static/media/createButton.png"></a>
+                                <a href='/admin'><img src="/static/media/adminButton.png"></a>
+                                <a href='/accounts/logout'><img src="/static/media/logoutButton.png"></a>
+                            {% else %}
+                                <a href='/accounts/login/' ><img src="/static/media/loginButton.png"></a>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <div class="survey-container">
+                            <p style="line-height:0px; background-color: transparent;">
+                                <a href='/?view=1' ><img src="/static/media/newButton{% if view_id == 1 %}On{% endif %}.png"></a>
+                                <a href='/?view=2' ><img src="/static/media/popularButton{% if view_id == 2 %}On{% endif %}.png"></a>
+                                <a href='/?view=3' ><img src="/static/media/recentButton{% if view_id == 3 %}On{% endif %}.png"></a>
+                                <a href='/?view=4' ><img src="/static/media/allButton{% if view_id == 4 %}On{% endif %}.png"></a>
+                                {% if user.is_staff %}
+                                    <a href='/?view=5' ><img src="/static/media/unpublishButton{% if view_id == 5 %}On{% endif %}.png"></a>
+                                    <a href='/?view=6' ><img src="/static/media/thrashButton{% if view_id == 6 %}On{% endif %}.png"></a>
                                 {% endif %}
-                            </ul>
+                            </p>
+
+                            <p style="line-height:0px; background-color: transparent;">
+                                {% if view_id == 1 %}
+                                    <img src="/static/media/newHead.png">
+                                {% endif %}
+
+                                {% if view_id == 2 %}
+                                    <img src="/static/media/popularHead.png">
+                                {% endif %}
+
+                                {% if view_id == 3 %}
+                                    <img src="/static/media/recentHead.png">
+                                {% endif %}
+
+                                {% if view_id == 4 %}
+                                    <img src="/static/media/allHead.png">
+                                {% endif %}
+
+                                {% if view_id == 5 %}
+                                    <img src="/static/media/unpublishHead.png">
+                                {% endif %}
+
+                                {% if view_id == 6 %}
+                                    <img src="/static/media/deletedHead.png">
+                                {% endif %}
+
+                            </p>
+
+                            {% if survey_list %}
+                                {% for survey in survey_list %}
+
+                                    <p id="survey-row">
+                                        {% if view_id == 1 %}
+                                            <a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}" class="survey">{{ survey.title }}</a> published <b>{{ survey.starttime|naturaltime }}</b>
+                                        {% endif %}
+
+                                        {% if view_id == 2 %}
+                                            <a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}" class="survey">{{ survey.title }}</a> <b>{{ survey.participants }} participants</b>
+                                        {% endif %}
+
+                                        {% if view_id == 3 %}
+                                            <a href="{% url surveys.views.results survey_id=survey.id %}" class="survey">{{ survey.title }}</a> <b>{{ survey.participants }} participants</b>, ended <b>{{ survey.endtime|naturaltime }}</b>
+                                        {% endif %}
+
+                                        {% if view_id == 4 %}
+                                            <a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}" class="survey">{{ survey.title }}</a> by <b>{{ survey.owner.get_full_name }}</b>
+                                        {% endif %}
+
+                                        {% if view_id == 5 %}
+                                            <a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}" class="survey">{{ survey.title }}</a> created <b>{{ survey.created|naturaltime }}</b> by <b>{{ survey.owner.get_full_name }}</b>
+                                        {% endif %}
+
+                                        {% if view_id == 6 %}
+                                            <a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}" class="survey">{{ survey.title }}</a> created <b>{{ survey.created|naturaltime }}</b> by <b>{{ survey.owner.get_full_name }}</b>
+                                        {% endif %}
+                                    </p>
+
+                                {% endfor %}
+                            {% else %}
+                                <p id="survey-row">No surveys are available.</p>
+                            {% endif %}
+
                         </div>
-                    {% endfor %}
-            {% endif %}
-        {% endif %}
+                    </div>
+                </div>
+            </div>
 
+        </div>
+    </div>
 
-        {% if user.is_authenticated %}
-            <h2>Profile Page:</h2>
-            <p><a href="{% url accounts.views.profile %}">Go to profile</a></p>
-        {% else %}
-            <p><a href="{% url accounts.views.accounthome %}">Login</a> to create a survey</p>
-        {% endif %}
-    </body>
-</html>
+{% endblock %}

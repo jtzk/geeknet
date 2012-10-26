@@ -10,4 +10,5 @@ urlpatterns = patterns('surveys.views',
     url(r'^create/$', 'create'),
     url(r'^(?P<survey_id>\d+)/edit/$', 'edit'),
     url(r'^(?P<survey_id>\d+)/(?P<slug>[-\w]+)/$', 'detail'),
+    url(r'^search/$', 'searchPage')
 )
