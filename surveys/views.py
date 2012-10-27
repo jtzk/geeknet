@@ -69,7 +69,7 @@ def detail(request, survey_id, slug):
             return HttpResponseRedirect(reverse('surveys.views.question', args=(s.id, q.id,)))
     if slug == "default":
         return HttpResponseRedirect(reverse('surveys.views.detail', args=(s.id, s.slug)))
-    if s.endtime != None:
+    if s.endtime is None:
         if s.status != s.STATUS_ENDED and s.endtime <= timezone.now():
             s.status = s.STATUS_ENDED
             s.save()

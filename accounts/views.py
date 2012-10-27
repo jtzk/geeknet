@@ -76,7 +76,7 @@ def profile(request):
         user_survey_list = Survey.objects.filter(owner=request.user).exclude(status=Survey.STATUS_INACTIVE).order_by('starttime' , 'status').reverse()
         for survey in user_survey_list:
 
-            if (survey.endtime != None) and (survey.endtime <= timezone.now()):
+            if survey.endtime is None and survey.endtime <= timezone.now():
                 survey.status = survey.STATUS_ENDED
                 survey.save()
 

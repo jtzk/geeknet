@@ -2,38 +2,86 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a9f32d4-1b57-4cf5-a2d3-75b423abe100" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/css/1140.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/css/ie.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/css/styles.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/css3-mediaqueries.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/surveys/search.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/base.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/surveys/search.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/surveys/searchresults.html" />
-      <change type="DELETED" beforePath="C:\Users\etch\Desktop\geeknet\templates\accounts\accounthome.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\etch\Desktop\geeknet\templates\accounts\base.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/accounts/models.py" afterPath="$PROJECT_DIR$/accounts/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/accounts/urls.py" afterPath="$PROJECT_DIR$/accounts/urls.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/changelist-bg.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/changelist-bg_rtl.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/chooser-bg.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/chooser_stacked-bg.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/default-bg-reverse.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/default-bg.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/deleted-overlay.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/gis/move_vertex_off.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/gis/move_vertex_on.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-no.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-unknown.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-yes.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_addlink.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_alert.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_calendar.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_changelink.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_clock.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_deletelink.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_error.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_searchbox.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon_success.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/inline-delete-8bit.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/inline-delete.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/inline-restore-8bit.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/inline-restore.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/inline-splitter-bg.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/nav-bg-grabber.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/nav-bg-reverse.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/nav-bg-selected.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/nav-bg.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/selector-icons.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/selector-search.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/sorting-icons.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tool-left.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tool-left_over.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tool-right.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tool-right_over.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tooltag-add.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tooltag-add_over.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tooltag-arrowright.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tooltag-arrowright_over.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/media/Thumbs.db" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/base.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/changelists.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/dashboard.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/forms.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/ie.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/login.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/rtl.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/widgets.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/LICENSE-JQUERY.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/SelectBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/SelectFilter2.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/actions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/actions.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/admin/DateTimeShortcuts.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/admin/RelatedObjectLookups.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/admin/ordering.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/calendar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/collapse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/collapse.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/compress.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/core.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/getElementsBySelector.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/inlines.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/inlines.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/jquery.init.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/jquery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/jquery.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/prepopulate.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/prepopulate.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/timeparse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/urlify.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/jquery-1.8.2.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/jquery-ui-1.9.0.custom.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/jquery-ui-1.9.0.custom.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/jquery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/accounts/views.py" afterPath="$PROJECT_DIR$/accounts/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/geeknet/settings.py" afterPath="$PROJECT_DIR$/geeknet/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/surveys/forms.py" afterPath="$PROJECT_DIR$/surveys/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/surveys/urls.py" afterPath="$PROJECT_DIR$/surveys/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/surveys/views.py" afterPath="$PROJECT_DIR$/surveys/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/logged_out.html" afterPath="$PROJECT_DIR$/templates/accounts/logged_out.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/login.html" afterPath="$PROJECT_DIR$/templates/accounts/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/password_change_done.html" afterPath="$PROJECT_DIR$/templates/accounts/password_change_done.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/password_change_form.html" afterPath="$PROJECT_DIR$/templates/accounts/password_change_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/password_reset_complete.html" afterPath="$PROJECT_DIR$/templates/accounts/password_reset_complete.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/password_reset_confirm.html" afterPath="$PROJECT_DIR$/templates/accounts/password_reset_confirm.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/password_reset_done.html" afterPath="$PROJECT_DIR$/templates/accounts/password_reset_done.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/password_reset_email.html" afterPath="$PROJECT_DIR$/templates/accounts/password_reset_email.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/password_reset_form.html" afterPath="$PROJECT_DIR$/templates/accounts/password_reset_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/profile.html" afterPath="$PROJECT_DIR$/templates/accounts/profile.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/signup_complete.html" afterPath="$PROJECT_DIR$/templates/accounts/signup_complete.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/signup_done.html" afterPath="$PROJECT_DIR$/templates/accounts/signup_done.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/accounts/signup_form.html" afterPath="$PROJECT_DIR$/templates/accounts/signup_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/surveys/index.html" afterPath="$PROJECT_DIR$/templates/surveys/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/surveys/results/results.html" afterPath="$PROJECT_DIR$/templates/surveys/results/results.html" />
     </list>
     <ignored path="testproject.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -53,11 +101,22 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="create.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="create.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/surveys/create.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="25" selection-start="546" selection-end="556" vertical-scroll-proportion="0.54569894">
+            <state line="17" column="25" selection-start="546" selection-end="556" vertical-scroll-proportion="0.0">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/accounts/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="79" column="51" selection-start="3302" selection-end="3302" vertical-scroll-proportion="0.8041237">
+              <folding>
+                <element signature="e#0#57#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -95,10 +154,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1296" />
-    <option name="height" value="776" />
+    <option name="x" value="-4" />
+    <option name="y" value="-4" />
+    <option name="width" value="1928" />
+    <option name="height" value="1178" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -126,7 +185,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -141,7 +199,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="geeknet" />
+              <option name="myItemId" value="geeknet1" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -151,11 +209,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="geeknet" />
+              <option name="myItemId" value="geeknet1" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
+              <option name="myItemId" value="static" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -165,20 +223,35 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="geeknet1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
               <option name="myItemId" value="geeknet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="geeknet1" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="surveys" />
+              <option name="myItemId" value="accounts" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -194,12 +267,8 @@
   </component>
   <component name="PublishConfig">
     <servers>
-      <server id="3de6c8a3-0c3f-4bd5-ad1a-e3e1a36c07c0">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" />
-          </mappings>
-        </serverdata>
+      <server id="32043636-d451-40ac-8457-24c781e907ad">
+        <serverdata />
       </server>
     </servers>
   </component>
@@ -429,18 +498,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1296" height="776" extended-state="7" />
-    <editor active="true" />
+    <frame x="-4" y="-4" width="1928" height="1178" extended-state="6" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23745173" sideWeight="0.4742647" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3283582" sideWeight="0.49092558" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27949184" sideWeight="0.17910448" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31037277" sideWeight="0.6866883" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31750268" sideWeight="0.6875" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39941406" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3330435" sideWeight="0.2274436" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3133117" sideWeight="0.5364668" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3133117" sideWeight="0.45786062" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3125" sideWeight="0.5364668" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31267875" sideWeight="0.45786062" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32818532" sideWeight="0.49632353" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -509,43 +578,27 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/templates/accounts/signup_complete.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="68" selection-start="2138" selection-end="2138" vertical-scroll-proportion="7.076923">
-          <folding>
-            <element signature="e#1078#1116#0" expanded="true" />
-            <element signature="e#1442#1497#0" expanded="true" />
-            <element signature="e#1990#2068#0" expanded="true" />
-          </folding>
-        </state>
+        <state line="56" column="68" selection-start="2138" selection-end="2138" vertical-scroll-proportion="7.076923" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/accounts/profile.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="38" selection-start="1211" selection-end="1265" vertical-scroll-proportion="-26.153847">
-          <folding />
-        </state>
+        <state line="40" column="38" selection-start="1211" selection-end="1265" vertical-scroll-proportion="-26.153847" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/surveys/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="158" column="249" selection-start="7811" selection-end="7811" vertical-scroll-proportion="8.665455">
-          <folding />
-        </state>
+        <state line="158" column="249" selection-start="7811" selection-end="7811" vertical-scroll-proportion="8.665455" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/geeknet/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/accounts/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/surveys/models.py">
@@ -559,75 +612,57 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/surveys/edit/edit.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="169" column="81" selection-start="11598" selection-end="11601" vertical-scroll-proportion="-6.6538463">
-          <folding />
-        </state>
+        <state line="169" column="81" selection-start="11598" selection-end="11601" vertical-scroll-proportion="-6.6538463" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/accounts/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/surveys/search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/surveys/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="35" selection-start="580" selection-end="580" vertical-scroll-proportion="0.6496815" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/surveys/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="29" selection-start="479" selection-end="479" vertical-scroll-proportion="0.566879" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/surveys/search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/surveys/results/results.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="65" selection-start="695" selection-end="695" vertical-scroll-proportion="1.4218181" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/surveys/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="290" column="15" selection-start="13803" selection-end="13803" vertical-scroll-proportion="-0.1295681" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/surveys/create.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="25" selection-start="546" selection-end="556" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/accounts/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="51" selection-start="3306" selection-end="3306" vertical-scroll-proportion="0.26578072">
+        <state line="79" column="51" selection-start="3302" selection-end="3302" vertical-scroll-proportion="0.8041237">
           <folding>
             <element signature="e#0#57#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/surveys/search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/surveys/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="35" selection-start="580" selection-end="580" vertical-scroll-proportion="0.6496815">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/surveys/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="29" selection-start="479" selection-end="479" vertical-scroll-proportion="0.566879">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/surveys/search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/surveys/results/results.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="65" selection-start="695" selection-end="695" vertical-scroll-proportion="1.4218181">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/surveys/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="290" column="15" selection-start="13803" selection-end="13803" vertical-scroll-proportion="-0.1295681">
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/surveys/create.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="25" selection-start="546" selection-end="556" vertical-scroll-proportion="0.54569894">
-          <folding />
         </state>
       </provider>
     </entry>
