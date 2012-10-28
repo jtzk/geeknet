@@ -6,6 +6,3 @@ def about(request):
 
 def contact(request):
     return render_to_response('contact.html' , RequestContext(request))
-
-def resulttest(request):
-    return render_to_response('result2.html' , RequestContext(request))
