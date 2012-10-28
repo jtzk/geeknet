@@ -1,15 +1,219 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-    <h1>{{ survey.title }}</h1>
+{% extends "base.html" %}
 
-    <ul style="list-style-type: none; padding: 0">
-        {% for question in survey.question_set.all %}
-            <li><a href="{% url surveys.views.question survey_id=survey.id question_id=question.id %}">{{ question.question }}</a></li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% load humanize %}
+
+{% block extrahead %}
+
+    <style type="text/css" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+
+        .survey-container {
+            border: 2px solid #2f2f2f;
+            -webkit-border-radius: 19px;
+            -moz-border-radius: 19px;
+            border-radius: 19px;
+            -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            text-decoration: none;
+            padding-bottom:20px;
+        }
+
+        #survey-row
+        {
+            line-height: 20px;
+            background-color: #1e1e1e;
+        }
+
+        .survey
+        {
+            color: #cbcbcb;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            padding-bottom: 5px;;
+            border-bottom: 1px dashed #DD0000;
+            line-height: 15px;
+        }
+
+        .surveydetails
+        {
+            color: #cbcbcb;
+            float: none;
+            width: 100%;
+            text-align: center;
+            list-style-type: none;
+            font-size: 12px;
+            text-shadow: #404040 0 1px 0;
+        }
+
+        .submit-button {
+            border: 1px solid #447314;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            text-shadow: #addc7e 0 1px 0;
+            color: #31540c;
+            font-family: helvetica, serif;
+            padding: 8.5px 6px;
+            font-size: 14px;
+            text-decoration: none;
+            vertical-align: middle;
+        }
+        .submit-button:hover {
+            border: 1px solid #447314;
+            text-shadow: #31540c 0 1px 0;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            color: #fff;
+        }
+        .submit-button:active {
+            text-shadow: #31540c 0 1px 0;
+            border: 1px solid #447314;
+            background: #8dc059;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6aa436), to(#6aa436));
+            background: -webkit-linear-gradient(top, #6aa436, #8dc059);
+            background: -moz-linear-gradient(top, #6aa436, #8dc059);
+            background: -ms-linear-gradient(top, #6aa436, #8dc059);
+            background: -o-linear-gradient(top, #6aa436, #8dc059);
+            background-image: -ms-linear-gradient(top, #6aa436 0%, #8dc059 100%);
+            color: #fff;
+        }
+
+        @media handheld, only screen and (max-width: 767px) {
+
+        }
+
+    </style>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div id="wrap">
+
+        <div id="main">
+
+            <div class="container">
+                <div class="row">
+                    <div class="sixcol">
+                        <p class="logo" style="background-color: transparent;">
+                            <a href='/'><img src="/static/media/logo.png"></a>
+                        </p>
+                    </div>
+
+                    <div class="sixcol last">
+                        <p class="login" style="background-color: transparent;">
+                            {% if user.is_authenticated %}
+                                Welcome, {{ user.username }}.
+                            {% else %}
+                                Hello, Guest.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <p style="margin-top: 0px; background-color: transparent;">
+                            <a href='' ><img src="/static/media/aboutButton.png"></a>
+                            <a href=''><img src="/static/media/contactButton.png"></a>
+                            {% if user.is_authenticated %}
+                                <a href='/accounts/profile'><img src="/static/media/profileButton.png"></a>
+                                <a href='/surveys/create'><img src="/static/media/createButton.png"></a>
+                                {% if user.is_staff %}
+                                    <a href='/admin'><img src="/static/media/adminButton.png"></a>
+                                {% endif %}
+                                <a href='/accounts/logout'><img src="/static/media/logoutButton.png"></a>
+                            {% else %}
+                                <a href='/accounts/login/' ><img src="/static/media/loginButton.png"></a>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <div class="survey-container">
+
+                            <p class="survey" style="line-height:20px; background-color: transparent;">
+                                {{ survey.title }}
+                            </p>
+
+                            <p style="line-height:20px; background-color: transparent;">
+                                Questions Overview
+                            </p>
+
+                            <p style="line-height:0px; background-color: transparent;">
+                                <ul class="surveydetails">
+                                {% if survey.status == survey.STATUS_PUBLISHED %}
+                                            {% for question in survey.question_set.all %}
+                                                <li>Q{{ forloop.counter	 }}. {{ question.question }}</li>
+                                            {% endfor %}
+                                {% else %}
+                                        <li>Survey Status: <b style="color: #ff0000;">{{ survey.get_status_display }}</b></li>
+                                {% endif %}
+                                </ul>
+                            </p>
+
+                            {% if survey.owner == user or user.is_staff %}
+                                <p style="line-height:0px; background-color: transparent;">
+                                <form action="{% url surveys.views.edit survey_id=survey.id %}" method="get">
+                                    {% csrf_token %}
+                                    <p style="line-height:0px; background-color: transparent;">
+                                        <input type="submit" class="submit-button" value="Manage Survey" />
+                                    </p>
+                                </form>
+                                </p>
+                            {% endif %}
+
+
+                            {% if survey.status == survey.STATUS_PUBLISHED %}
+                                <p style="line-height:0px; background-color: transparent; float: right;">
+                                    {% if nextquestion %}
+                                        <form action="{% url surveys.views.question survey_id=survey.id question_id=nextquestion.id %}" method="get">
+                                            {% csrf_token %}
+                                            <p style="line-height:0px; background-color: transparent;">
+                                                <input type="submit" class="submit-button" value="Continue Survey" style="padding: 8.5px 3px;"/>
+                                            </p>
+                                        </form>
+                                    {% else %}
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <p style="line-height:0px; background-color: transparent;">
+                                                <input type="submit" class="submit-button" name="participate" value="Take Survey" style="padding: 8.5px 16px;"/>
+                                            </p>
+                                        </form>
+                                    {% endif %}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

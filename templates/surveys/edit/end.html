@@ -1,26 +1,187 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>End Survey</title>
-    <style type="text/css">
-        ul { list-style-type: none; margin: 0; padding: 0 }
-        li { display:inline; margin:0  }
+{% extends "base.html" %}
+
+{% block extrahead %}
+
+    <style type="text/css" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+        .endcontainer {
+            border: 2px solid #2f2f2f;
+            -webkit-border-radius: 19px;
+            -moz-border-radius: 19px;
+            border-radius: 19px;
+            -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            text-decoration: none;
+            padding-bottom:20px;
+        }
+
+        .survey
+        {
+            color: #cbcbcb;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            padding-bottom: 5px;;
+            border-top: 1px dashed #DD0000;
+            border-bottom: 1px dashed #DD0000;
+            line-height: 15px;
+        }
+
+        .form-title {
+            margin-bottom:10px;
+            color: #cbcbcb;
+            text-shadow: #404040 0 1px 0;
+        }
+
+        .submit-button {
+            border: 1px solid #447314;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            text-shadow: #addc7e 0 1px 0;
+            color: #31540c;
+            font-family: helvetica, serif;
+            padding: 8.5px 36px;
+            font-size: 14px;
+            text-decoration: none;
+            vertical-align: middle;
+        }
+        .submit-button:hover {
+            border: 1px solid #447314;
+            text-shadow: #31540c 0 1px 0;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            color: #fff;
+        }
+        .submit-button:active {
+            text-shadow: #31540c 0 1px 0;
+            border: 1px solid #447314;
+            background: #8dc059;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6aa436), to(#6aa436));
+            background: -webkit-linear-gradient(top, #6aa436, #8dc059);
+            background: -moz-linear-gradient(top, #6aa436, #8dc059);
+            background: -ms-linear-gradient(top, #6aa436, #8dc059);
+            background: -o-linear-gradient(top, #6aa436, #8dc059);
+            background-image: -ms-linear-gradient(top, #6aa436 0%, #8dc059 100%);
+            color: #fff;
+        }
+
+        .errorlist
+        {
+            color: red;
+            float: none;
+            list-style-type:none;
+            width: 100%;
+            text-align: center;
+        }
+
     </style>
-</head>
-<body>
-    <h1>End {{ survey.title }}</h1>
-    {% if action == 0 %}
-        <p>Are you sure you wish to end the survey "{{ survey.title }}" now?</p>
-        <form action="" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="end" />
-            <ul>
-                <li><input type="submit" name="confirm" value="Yes" /></li>
-                <li><input type="submit" name="negative" value="No" /></li>
-            </ul>
-        </form>
-    {% else %}
-        <p>Ended. You may now view the survey <a href="{% url surveys.views.results survey_id=survey.id %}">results</a>.</p>
-    {% endif %}
-</body>
-</html>
+
+{% endblock %}
+
+{% block content %}
+
+    <div id="wrap">
+
+        <div id="main">
+
+            <div class="container">
+                <div class="row">
+                    <div class="sixcol">
+                        <p class="logo" style="background-color: transparent;">
+                            <a href='/'><img src="/static/media/logo.png"></a>
+                        </p>
+                    </div>
+
+                    <div class="sixcol last">
+                        <p class="login" style="background-color: transparent;">
+                            {% if user.is_authenticated %}
+                                Welcome, {{ user.username }}.
+                            {% else %}
+                                Hello, Guest.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <div class="endcontainer">
+
+                            <p class="survey" style="line-height:20px; background-color: transparent; border-top: none; margin-bottom: 20px;">
+                                End Survey
+                            </p>
+
+                            {% if action == 0 %}
+                                <p style="line-height:20px; background-color: transparent;">
+                                    Are you sure you wish to end the survey [ {{ survey.title }}] now?
+                                </p>
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="end" />
+                                        <div class="container">
+                                        <div class="row">
+                                            <div class="sixcol">
+                                                <p style="line-height:0px; background-color: transparent;">
+                                                    <input style="padding: 8.5px 33px;" class="submit-button" type="submit" name="confirm" value="Yes" />
+
+                                                </p>
+                                            </div>
+                                                <div class="sixcol last">
+                                                    <p style="line-height:0px; background-color: transparent;">
+                                                        <input class="submit-button" type="submit" name="negative" value="No" />
+
+                                                    </p>
+                                                </div>
+                                        </div>
+                                        </div>
+
+                                </form>
+                            {% else %}
+                                <p style="line-height:20px; background-color: transparent;">
+                                    Survey Ended. You may now view the survey results.
+                                </p>
+                                <p style="line-height:20px; background-color: transparent;">
+                                    <a href="{% url surveys.views.results survey_id=survey.id %}" style="text-decoration: none;"><img src="/static/media/viewresults.png"></a>
+                                </p>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+
+
+
+
+

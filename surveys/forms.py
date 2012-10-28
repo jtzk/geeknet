@@ -17,4 +17,4 @@ class QuestionForm(forms.ModelForm):
         exclude = ('survey',)
 
 class SearchForm(forms.Form):
-    title = forms.CharField(required=False, max_length=100, help_text="Search by Title")
+    title = forms.CharField(required=False, max_length=100, help_text="Search")

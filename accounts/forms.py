@@ -14,13 +14,13 @@ class UserCreationForm(forms.ModelForm):
     first_name = forms.CharField(label="First Name", max_length=30)
     last_name = forms.CharField(label="Last Name", max_length=30)
 
-    birth_date = forms.DateField(label="Birth Date")
+    birth_date = forms.DateField(label="Birth Date", input_formats = ('%d/%m/%Y', '%d/%m/%y'))
 
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
-    password2 = forms.CharField(label="Password confirmation", widget=forms.PasswordInput,
+    password2 = forms.CharField(label="Confirm Password", widget=forms.PasswordInput,
         help_text = "Enter the same password as above, for verification.")
-    email1 = forms.EmailField(label="Email", max_length=75)
-    email2 = forms.EmailField(label="Email confirmation", max_length=75,
+    email1 = forms.EmailField(label="E-Mail", max_length=75)
+    email2 = forms.EmailField(label="Confirm E-Mail", max_length=75,
         help_text = "Enter your email address again. A confirmation email will be sent to this address.")
 
     class Meta:

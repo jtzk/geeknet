@@ -12,6 +12,10 @@
 </head>
 <body>
 <h1>{{ survey.title }}</h1>
+<h3>{{ survey.resultDisplay }}</h3>
+<h3>{{ survey.owner.username }}</h3>
+<h3>{{ survey.information }}</h3>
+
 
 <ul>
     <h2>Statistics</h2>
@@ -21,8 +25,7 @@
     <p>IP List:</p>
     <ul>
         {% for surveyee in survey.surveyee_set.all %}
-            <li><p>{{ surveyee.ip }} : {{ surveyee.user.get_full_name }}</p></li>
-        {% endfor %}
+            <li><p>{{ surveyee.ip }}: {{ surveyee.user.get_full_name }} ({{ surveyee.user.username }})</p></li>        {% endfor %}
     </ul>
 
 

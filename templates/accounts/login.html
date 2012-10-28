@@ -29,7 +29,9 @@
             -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
             box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
             padding: 2px;;
-            width:100px;
+            width:80%;
+            max-width: 200px;
+            text-align: center;
         }
         #id_username:focus , #id_password:focus{
             background: #000000;
@@ -148,13 +150,21 @@
                 <div class="row">
                     <div class="twelvecol last">
                         <div class="logincontainer">
+
+                            <p style="line-height:0px; background-color: transparent;">
+                                <img src="/static/media/signinHead.png">
+                            </p>
+
                             <p style="line-height:0px; background-color: transparent;">
 
                             <form action="{% url django.contrib.auth.views.login %}" method="post">
                                 {% csrf_token %}
                                 {% for field in form %}
                                     <p style="line-height: 15px; background-color: transparent;">
-                                        <span class="form-title">{{ field.label_tag }}:</span> {{ field }}
+                                        <span class="form-title">{{ field.label_tag }}</span>
+                                        </br>
+                                        <span>{{ field }}</span>
+                                        </br>
                                         {{ field.errors }}
                                     </p>
                                 {% endfor %}

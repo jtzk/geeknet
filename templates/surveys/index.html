@@ -35,6 +35,92 @@
             border-bottom: 1px dashed #DD0000;
         }
 
+        .surveydetails
+        {
+            color: #cbcbcb;
+            background-color: #202020;
+            float: none;
+            list-style-type:none;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            text-shadow: #404040 0 1px 0;
+        }
+
+        #id_title {
+            border: 1px solid #3b3b3b;
+            background: #ffffff;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            color: #000000;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            padding: 2px;;
+            width:80%;
+            max-width: 200px;
+            text-align: center;
+        }
+        #id_title:focus {
+            background: #000000;
+            color: #55e34d;
+        }
+
+        .form-title {
+            margin-bottom:10px;
+            color: #cbcbcb;
+            text-shadow: #404040 0 1px 0;
+        }
+
+        .submit-button {
+            border: 1px solid #447314;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            text-shadow: #addc7e 0 1px 0;
+            color: #31540c;
+            font-family: helvetica, serif;
+            padding: 3px 10px;
+            font-size: 12px;
+            text-decoration: none;
+            vertical-align: middle;
+        }
+        .submit-button:hover {
+            border: 1px solid #447314;
+            text-shadow: #31540c 0 1px 0;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            color: #fff;
+        }
+        .submit-button:active {
+            text-shadow: #31540c 0 1px 0;
+            border: 1px solid #447314;
+            background: #8dc059;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6aa436), to(#6aa436));
+            background: -webkit-linear-gradient(top, #6aa436, #8dc059);
+            background: -moz-linear-gradient(top, #6aa436, #8dc059);
+            background: -ms-linear-gradient(top, #6aa436, #8dc059);
+            background: -o-linear-gradient(top, #6aa436, #8dc059);
+            background-image: -ms-linear-gradient(top, #6aa436 0%, #8dc059 100%);
+            color: #fff;
+        }
+
         @media handheld, only screen and (max-width: 767px) {
 
         }
@@ -73,13 +159,15 @@
             <div class="container">
                 <div class="row">
                     <div class="twelvecol last">
-                        <p style="margin-top: 0px; background-color: transparent;">
+                        <p style="line-height:0; margin-top: 0px; background-color: transparent;">
                             <a href='' ><img src="/static/media/aboutButton.png"></a>
                             <a href=''><img src="/static/media/contactButton.png"></a>
                             {% if user.is_authenticated %}
                                 <a href='/accounts/profile'><img src="/static/media/profileButton.png"></a>
                                 <a href='/surveys/create'><img src="/static/media/createButton.png"></a>
-                                <a href='/admin'><img src="/static/media/adminButton.png"></a>
+                                {% if user.is_staff %}
+                                    <a href='/admin'><img src="/static/media/adminButton.png"></a>
+                                {% endif %}
                                 <a href='/accounts/logout'><img src="/static/media/logoutButton.png"></a>
                             {% else %}
                                 <a href='/accounts/login/' ><img src="/static/media/loginButton.png"></a>
@@ -92,44 +180,72 @@
             <div class="container">
                 <div class="row">
                     <div class="twelvecol last">
+                        <p style="line-height:0px; background-color: transparent;">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <p style="line-height: 0px; background-color: transparent;">
+                                    <span>{{ field }}</span> <input class="submit-button" type="submit" value="Search" />
+                                </p>
+                            {% endfor %}
+                        </form>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
                         <div class="survey-container">
                             <p style="line-height:0px; background-color: transparent;">
-                                <a href='/?view=1' ><img src="/static/media/newButton{% if view_id == 1 %}On{% endif %}.png"></a>
-                                <a href='/?view=2' ><img src="/static/media/popularButton{% if view_id == 2 %}On{% endif %}.png"></a>
-                                <a href='/?view=3' ><img src="/static/media/recentButton{% if view_id == 3 %}On{% endif %}.png"></a>
-                                <a href='/?view=4' ><img src="/static/media/allButton{% if view_id == 4 %}On{% endif %}.png"></a>
-                                {% if user.is_staff %}
-                                    <a href='/?view=5' ><img src="/static/media/unpublishButton{% if view_id == 5 %}On{% endif %}.png"></a>
-                                    <a href='/?view=6' ><img src="/static/media/thrashButton{% if view_id == 6 %}On{% endif %}.png"></a>
+                                {% if view_id != 10 %}
+                                    <img src="/static/media/surveyList.png" >
+                                {% else %}
+                                    <img src="/static/media/resultList.png" >
                                 {% endif %}
                             </p>
 
-                            <p style="line-height:0px; background-color: transparent;">
-                                {% if view_id == 1 %}
-                                    <img src="/static/media/newHead.png">
-                                {% endif %}
 
-                                {% if view_id == 2 %}
-                                    <img src="/static/media/popularHead.png">
-                                {% endif %}
+                            {% if view_id != 10 %}
+                                <p style="line-height:0px; background-color: transparent;">
+                                    <a href='/?view=1#catLink' name="catLink"><img src="/static/media/newButton{% if view_id == 1 %}On{% endif %}.png"></a>
+                                    <a href='/?view=2#catLink' ><img src="/static/media/popularButton{% if view_id == 2 %}On{% endif %}.png"></a>
+                                    <a href='/?view=3#catLink' ><img src="/static/media/allButton{% if view_id == 3 %}On{% endif %}.png"></a>
+                                    <a href='/?view=4#catLink' ><img src="/static/media/recentButton{% if view_id == 4 %}On{% endif %}.png"></a>
+                                    {% if user.is_staff %}
+                                        <a href='/?view=5#catLink' ><img src="/static/media/unpublishButton{% if view_id == 5 %}On{% endif %}.png"></a>
+                                        <a href='/?view=6#catLink' ><img src="/static/media/thrashButton{% if view_id == 6 %}On{% endif %}.png"></a>
+                                    {% endif %}
+                                </p>
 
-                                {% if view_id == 3 %}
-                                    <img src="/static/media/recentHead.png">
-                                {% endif %}
+                                <p style="line-height:0px; background-color: transparent;">
+                                    {% if view_id == 1 %}
+                                        <img src="/static/media/newHead.png">
+                                    {% endif %}
 
-                                {% if view_id == 4 %}
-                                    <img src="/static/media/allHead.png">
-                                {% endif %}
+                                    {% if view_id == 2 %}
+                                        <img src="/static/media/popularHead.png">
+                                    {% endif %}
 
-                                {% if view_id == 5 %}
-                                    <img src="/static/media/unpublishHead.png">
-                                {% endif %}
+                                    {% if view_id == 3 %}
+                                        <img src="/static/media/allHead.png">
+                                    {% endif %}
 
-                                {% if view_id == 6 %}
-                                    <img src="/static/media/deletedHead.png">
-                                {% endif %}
+                                    {% if view_id == 4 %}
+                                        <img src="/static/media/recentHead.png">
+                                    {% endif %}
 
-                            </p>
+                                    {% if view_id == 5 %}
+                                        <img src="/static/media/unpublishHead.png">
+                                    {% endif %}
+
+                                    {% if view_id == 6 %}
+                                        <img src="/static/media/deletedHead.png">
+                                    {% endif %}
+
+                                </p>
+                            {% endif %}
 
                             {% if survey_list %}
                                 {% for survey in survey_list %}
@@ -144,11 +260,11 @@
                                         {% endif %}
 
                                         {% if view_id == 3 %}
-                                            <a href="{% url surveys.views.results survey_id=survey.id %}" class="survey">{{ survey.title }}</a> <b>{{ survey.participants }} participants</b>, ended <b>{{ survey.endtime|naturaltime }}</b>
+                                            <a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}" class="survey">{{ survey.title }}</a> by <b>{{ survey.owner.get_full_name }}</b>
                                         {% endif %}
 
                                         {% if view_id == 4 %}
-                                            <a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}" class="survey">{{ survey.title }}</a> by <b>{{ survey.owner.get_full_name }}</b>
+                                            <a href="{% url surveys.views.results survey_id=survey.id %}" class="survey">{{ survey.title }}</a> <b>{{ survey.participants }} participants</b>, ended <b>{{ survey.endtime|naturaltime }}</b>
                                         {% endif %}
 
                                         {% if view_id == 5 %}
@@ -157,6 +273,22 @@
 
                                         {% if view_id == 6 %}
                                             <a href="{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}" class="survey">{{ survey.title }}</a> created <b>{{ survey.created|naturaltime }}</b> by <b>{{ survey.owner.get_full_name }}</b>
+                                        {% endif %}
+
+                                        {% if view_id == 10 %}
+                                            <a href="{%if survey.status == survey.STATUS_ENDED %}{% url surveys.views.results survey_id=survey.id %}
+                                            {% elif survey.status == survey.STATUS_ACTIVE or survey.status == survey.STATUS_INACTIVE   %}{% url surveys.views.edit survey_id=survey.id %}
+                                            {% else %}{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}
+                                            {% endif %}" class="survey">{{ survey.title }}</a>
+
+                                            <ul class="surveydetails">
+                                                <li>Status: <b style="{% if survey.status == survey.STATUS_ENDED %}color: red;{% elif survey.status == survey.STATUS_PUBLISHED %}color: #90ee90;{% else %}color: #4b4b4b;{% endif %}">{{ survey.get_status_display }}</b></li>
+                                                <li>Creator: <b>{{ survey.owner.get_full_name }}</b></li>
+                                                {% if survey.status == survey.STATUS_PUBLISHED %}
+                                                    <li >Survey Start: <b>{{ survey.starttime|naturaltime }}</b></li>
+                                                    <li >Survey End: <b>{{ survey.endtime|naturaltime }}</b></li>
+                                                {% endif %}
+                                            </ul>
                                         {% endif %}
                                     </p>
 

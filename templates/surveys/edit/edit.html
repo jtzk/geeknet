@@ -1,188 +1,574 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit - {{ survey.title }}</title>
-    <link type="text/css" href="/static/css/redmond/jquery-ui-1.9.0.custom.css" rel="stylesheet" />
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block extrahead %}
+
+    <link type="text/css" href="/static/css/jquery-ui-1.9.0.custom.css" rel="stylesheet" />
     <script src="/static/js/jquery-1.8.2.js" type="text/javascript"></script>
     <script src="/static/js/jquery-ui-1.9.0.custom.js" type="text/javascript"></script>
     <script src="/static/js/jquery-ui-1.9.0.custom.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(function() {
             $( ".datePicker" ).datepicker({ dateFormat: "dd/mm/yy", minDate: 1, maxDate: 30 });
+
+            // styling and dynamic adding of new choice input fields
+            $(document).on("focus", ".new" && ".choice", function() {
+                if (this.value == 'Add new choice')
+                    this.value='';
+                this.style.color='#000';
+                if($(this).parent().is(':last-child')) {
+                    questionNo = $(this).attr('name').split("-")[1];
+                    newId = "newChoice" + ($( "#newChoices-" + questionNo + " p" ).length+1) + "-" + questionNo;
+                    $( "#newChoices-" + questionNo ).append("<p style=\"line-height:0px; background-color: transparent;\"> <input type=\"radio\" onclick=\"if (this.checked)this.checked=false\" /><input class=\"choice new\" name=\"" + newId + "\" type=\"text\" value=\"Add new choice\" onkeydown=\"if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }\"/></p>");
+                }
+            });
+            $(document).on("blur", ".new" && ".choice", function() {
+                if(this.value=='') {
+                    this.value='Add new choice';
+                    this.style.color='#ccc';
+                }
+            });
+            // end
         });
     </script>
-    <style type="text/css">
-        div.surveyinfo { border:1px solid #eee; background:#f9f9f9; padding:10px; width:620px }
-        div.surveyinfo p { margin:5px; font:11px Verdana }
-        div.surveyinfo p.status { font-size:12px; margin-bottom:15px }
-        div.question { padding:5px 20px; margin-bottom:30px; border:1px solid #eee; width:600px }
-        .survey input { width:610px; padding:15px; background:#ffa; border:1px solid #eee; font-weight:bold; }
-        .survey h2, .question h2 { font:bold 12px Verdana }
-        .question input.question { width:400px; padding:5px; border:1px solid #f1f1f1; background:#f8f8f8 }
-        .question input.question:focus { background:#fff }
-        .question ul.question_type { list-style-type:none; padding:0 15px }
-        .question ul.question_type li { display:inline; font:11px Verdana; height:25px; padding:3px 4px; }
-        .question ul.question_type li input { text-decoration:none; color:#666 }
-        .question label { position:relative; bottom:2px; left:2px }
-        div.choices { font:11px Verdana; padding-left:25px }
-        div.choices input.choice { font:11px Verdana; padding:3px 5px; border:1px solid #ddd; position:relative; bottom:2px }
-        input.new { color:#ccc }
-        div.choices .text { width:350px; border:1px solid #999; padding:3px 5px; margin-left:5px; margin-bottom:20px; font-size:12px }
-        div.choices textarea.text { height:100px; font:12px "Arial" }
-        div.buttons { position:fixed; top:125px; left:700px }
-        div.buttons p { font:bold 12px Verdana }
-        div.buttons p.resultDisplay { margin:0; height:20px }
-        div.buttons p.resultDisplay input { width:auto; margin:0 10px; }
-        div.buttons input.datePicker { height:20px; width:150px; }
-        div.buttons label { font-weight:normal; position:relative; bottom:8px; }
-        div.buttons .hint { font:10px Verdana; margin:2px 0 50px 8px; color:#666 }
-        div.buttons input, div.buttons p.button { font:bold 11px Verdana; width:130px; height:25px; text-align:center; }
-        div.buttons p.button { border:1px solid #0af; }
-        div.buttons p.button a { line-height:25px; text-decoration:none; width:130px; display:block; background:#0bf; color:#fff }
-        div.buttons input:hover { cursor:pointer }
-        div.buttons p.results { border-color:#2b2; }
-        div.buttons p.results a { background:#3c3; }
-        input.submit { border:1px solid #6b6; background:#7c7; color:#fff }
-        input.reset, input.delete { border:1px solid #b66; background:#c77; color:#fff }
-        input.reset { margin-left:50px }
+
+
+
+
+    <style type="text/css" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html">
+
+        .survey-container {
+            border: 2px solid #2f2f2f;
+            -webkit-border-radius: 19px;
+            -moz-border-radius: 19px;
+            border-radius: 19px;
+            -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            text-decoration: none;
+            padding-bottom:20px;
+        }
+
+        #survey-row
+        {
+            line-height: 20px;
+            background-color: #1e1e1e;
+        }
+
+        .survey
+        {
+            color: #cbcbcb;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            padding-bottom: 5px;;
+            border-top: 1px dashed #DD0000;
+            border-bottom: 1px dashed #DD0000;
+            line-height: 15px;
+        }
+
+        .surveydetails
+        {
+            color: #cbcbcb;
+            float: none;
+            width: 100%;
+            text-align: center;
+            list-style-type: none;
+            font-size: 12px;
+            text-shadow: #404040 0 1px 0;
+        }
+
+        #id_textbox , #id_textarea, #id_date {
+            border: 1px solid #3b3b3b;
+        {% if survey.status != survey.STATUS_ACTIVE %}
+            background-color: gray;
+        {% else %}
+            background: #ffffff;
+        {% endif %}
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            color: #000000;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            padding: 2px;;
+            width:80%;
+            max-width: 400px;
+            text-align: center;
+        }
+        #id_textbox:focus , #id_textarea:focus , #id_date:focus {
+            background: #000000;
+            color: #55e34d;
+        }
+
+        .submit-button {
+            border: 1px solid #447314;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            text-shadow: #addc7e 0 1px 0;
+            color: #31540c;
+            font-family: helvetica, serif;
+            padding: 8.5px 30px;
+            font-size: 14px;
+            text-decoration: none;
+            vertical-align: middle;
+        }
+        .submit-button:hover {
+            border: 1px solid #447314;
+            text-shadow: #31540c 0 1px 0;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            color: #fff;
+        }
+        .submit-button:active {
+            text-shadow: #31540c 0 1px 0;
+            border: 1px solid #447314;
+            background: #8dc059;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6aa436), to(#6aa436));
+            background: -webkit-linear-gradient(top, #6aa436, #8dc059);
+            background: -moz-linear-gradient(top, #6aa436, #8dc059);
+            background: -ms-linear-gradient(top, #6aa436, #8dc059);
+            background: -o-linear-gradient(top, #6aa436, #8dc059);
+            background-image: -ms-linear-gradient(top, #6aa436 0%, #8dc059 100%);
+            color: #fff;
+        }
+
+
+        .submit-button2 {
+            border: 1px solid #0a3c59;
+            background: #3e779d;
+            background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
+            background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
+            background: -moz-linear-gradient(top, #65a9d7, #3e779d);
+            background: -ms-linear-gradient(top, #65a9d7, #3e779d);
+            background: -o-linear-gradient(top, #65a9d7, #3e779d);
+            background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
+            padding: 10.5px 21px;
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            text-shadow: #7ea4bd 0 1px 0;
+            color: #06426c;
+            font-size: 14px;
+            font-family: helvetica, serif;
+            text-decoration: none;
+            vertical-align: middle;
+        }
+        .submit-button2:hover {
+            border: 1px solid #0a3c59;
+            text-shadow: #1e4158 0 1px 0;
+            background: #3e779d;
+            background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
+            background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
+            background: -moz-linear-gradient(top, #65a9d7, #3e779d);
+            background: -ms-linear-gradient(top, #65a9d7, #3e779d);
+            background: -o-linear-gradient(top, #65a9d7, #3e779d);
+            background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
+            color: #fff;
+        }
+        .submit-button2:active {
+            text-shadow: #1e4158 0 1px 0;
+            border: 1px solid #0a3c59;
+            background: #65a9d7;
+            background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#3e779d));
+            background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+            background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+            background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+            background: -o-linear-gradient(top, #3e779d, #65a9d7);
+            background-image: -ms-linear-gradient(top, #3e779d 0%, #65a9d7 100%);
+            color: #fff;
+        }
+
         div.ui-datepicker{ font-size:12px; }
-        {% if user.is_superuser %}
-            .menu { list-style-type:none; padding:0 }
-            .menu li { margin:10px 0 }
-        {% endif %}
+
+        @media handheld, only screen and (max-width: 767px) {
+
+        }
+
     </style>
-</head>
-<body>
-<h1>Edit Survey</h1>
-{% if survey.owner == user or user.is_superuser %}
-    <div class="surveyinfo">
-        <p class="status">Survey status: <strong>{{ survey.get_status_display }}</strong></p>
-        {% if survey.status == survey.STATUS_ACTIVE %}
-            <p>You can edit this survey.</p>
-        {% elif survey.status != survey.STATUS_ACTIVE %}
-            <p>You cannot edit this survey.</p>
-        {% endif %}
-    </div>
-    <form id="surveyform" action="" method="post">
-        {% csrf_token %}
-        <div class="survey">
-            <p><input type="text" name="surveyTitle" value="{{ survey.title }}" /></p>
-        </div>
-        {% for question in survey.question_set.all %}
-            <div class="question">
-                <h2>Question {{ forloop.counter }}</h2>
-                <p><input class="question" name="questionName-{{ question.id }}" type="input" value="{{ question.question }}" /></p>
-                <p>
-                <ul class="question_type">
-                    <li>
-                        <input type="radio" id="question{{ question.id }}type-1" name="questionType-{{ question.id }}" value="1" {% if question.type == 1 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-1">Radio</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="question{{ question.id }}type-2" name="questionType-{{ question.id }}" value="2" {% if question.type == 2 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-2">Checkbox</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="question{{ question.id }}type-3" name="questionType-{{ question.id }}" value="3" {% if question.type == 3 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-3">Text Box</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="question{{ question.id }}type-4" name="questionType-{{ question.id }}" value="4" {% if question.type == 4 %}checked="checked" {% endif %}/><label for="question{{ question.id }}type-4">Text Area</label>
-                    </li>
-                </ul>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div id="wrap">
+
+    <div id="main">
+
+    <div class="container">
+        <div class="row">
+            <div class="sixcol">
+                <p class="logo" style="line-height:0; background-color: transparent;">
+                    <a href='/'><img src="/static/media/logo.png"></a>
                 </p>
-                <div class="choices">
-                    <h2>Choices:</h2>
-                    {% if question.type == 1 or question.type == 2 %}
-                        {% for choice in question.choice_set.all %}
-                            <p>
-                                {% autoescape off %}
-                                    {% if question.type == 1 %}
-                                        <input type="radio" name="question{{ question.id }}" onclick="if (this.checked)this.checked=false" /><input class="choice" name="choice-{{ choice.id }}" type="text" value="{{ choice.choice }}" />
-                                    {% elif question.type == 2 %}
-                                        <input type="checkbox" onclick="if (this.checked)this.checked=false" /><input class="choice" name="choice-{{ choice.id }}" type="text" value="{{ choice.choice }}" />
-                                    {% endif %}
-                                {% endautoescape %}
-                            </p>
-                        {% endfor %}
-                        {% if survey.status == survey.STATUS_ACTIVE %}
-                            <p>
-                                <input type="{% if question.type == 1 %}radio{% elif question.type == 2 %}checkbox{% endif %}" onclick="if (this.checked)this.checked=false" /><input class="choice new" name="newChoice-{{ question.id }}" type="text" value="Add new choice" onfocus="if (this.value == 'Add new choice')this.value='';this.style.color='#000'" onblur="if(this.value=='') { this.value='Add new choice';this.style.color='#ccc' }" />
-                            </p>
-                        {% endif %}
-                    {% elif question.type == 3 %}
-                        <input class="text" type="text" value="Text is entered here" />
-                    {% elif question.type == 4 %}
-                        <textarea class="text" type="text">Text is entered here&#10;&#10;&#10;&#10;Multiple lines are supported</textarea>
+            </div>
+
+            <div class="sixcol last">
+                <p class="login" style="background-color: transparent;">
+                    {% if user.is_authenticated %}
+                        Welcome, {{ user.username }}.
+                    {% else %}
+                        Hello, Guest.
                     {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+    <div class="row">
+    <div class="twelvecol last">
+    <div class="survey-container">
+    <form id="surveyform" action="" method="post">
+    {% csrf_token %}
+
+    <p style="line-height:0px; background-color: transparent;">
+        <img src="/static/media/manageHead.png">
+    </p>
+
+    <p class="survey" style="line-height:20px; background-color: transparent; border-top: none;">
+        {{ survey.title }}
+    </p>
+
+    {% if survey.owner == user or user.is_staff %}
+        <p style="line-height:0px; background-color: transparent;">
+
+        <ul class="surveydetails">
+            <li>Survey creator: <b>{{ survey.owner }}</b></li>
+            <li>Survey status: <b>{{ survey.get_status_display }}</b></li>
+            {% if survey.status == survey.STATUS_ACTIVE %}
+                <li style="color: #90ee90;">You can edit this survey.</li>
+            {% elif survey.status != survey.STATUS_ACTIVE %}
+                <li style="color: red;">You cannot edit this survey.</li>
+            {% endif %}
+
+        </ul>
+        </p>
+
+        <div class="container">
+            <div class="row">
+                    {% if survey.status == survey.STATUS_PUBLISHED %}
+
+                    <div class="sixcol">
+                        <p style="margin-top: 0px; background-color: transparent;  line-height: 20px; margin-bottom: 20px;">
+                            <a href="{% url surveys.views.results survey_id=survey.id %}" style="text-decoration: none;"><img src="/static/media/viewresults.png"></a>
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <div class="{% if survey.status == survey.STATUS_PUBLISHED %}sixcol{% else %}twelvecol{% endif %} last">
+                        <p style="margin-top: 0px; background-color: transparent;  line-height: 20px; margin-bottom: 20px;">
+                            <a href="{% if survey.status == survey.STATUS_PUBLISHED %}{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}{% else %}{% url surveys.views.index %}{% endif %}" style=" text-decoration: none;"><img src="/static/media/done.png"></a>
+                        </p>
+                    </div>
+
+            </div>
+        </div>
+
+
+        {% if user.is_staff %}
+
+            <p  class="survey" style="line-height:20px; background-color: transparent; margin-top: 30px; padding-bottom: 15px; padding-top: 15px; border-bottom: none;">
+                Admin Controls
+            </p>
+
+            <div class="container">
+                <div class="row">
+                    {% if survey.status == survey.STATUS_PUBLISHED %}
+                        <div class="threecol">
+                            <p  style="line-height:0px; background-color: transparent;">
+                                <input style="padding: 8.5px 24px; " class="submit-button2" name="unpublish" type="submit" value="Unpublish" />
+                            </p>
+                        </div>
+                        <div class="threecol">
+                            <p  style="line-height:0px; background-color: transparent;">
+                                <input style="padding: 8.5px 42px;" class="submit-button2" name="end" type="submit" value="End" />
+                            </p>
+                        </div>
+                    {% endif %}
+                    <div class="{% if survey.status == survey.STATUS_PUBLISHED %}threecol{% else %}sixcol{% endif %}">
+                        <p style="line-height:0px; background-color: transparent;">
+                            <input style="padding: 8.5px 34px;" class="submit-button2" name="{% if survey.status == survey.STATUS_INACTIVE %}un{% endif %}delete" type="submit" value="{% if survey.status == survey.STATUS_INACTIVE %}Undelete{% else %}Delete{% endif %}" />
+                        </p>
+                    </div>
+                    <div class="{% if survey.status == survey.STATUS_PUBLISHED %}threecol{% else %}sixcol{% endif %} last">
+                        <p  style="line-height:0px; background-color: transparent;">
+                            {% if survey.owner.is_active %}
+                                <input style="padding: 8.5px 16px;" class="submit-button2" name="ban" type="submit" value="Ban Creator" />
+                            {% else %}
+                                <input style="padding: 8.5px 14px;" class="submit-button2" class="button" name="unban" type="submit" value="Unban Creator" />
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
             </div>
-        {% endfor %}
+        {% endif %}
+
         {% if survey.status == survey.STATUS_ACTIVE %}
-            <div class="question">
-                <h2>New Question</h2>
-                <p><input class="question new" name="newQuestion" type="input" value="Enter a new question" onfocus="if (this.value == 'Enter a new question')this.value='';this.style.color='#000'" onblur="if(this.value=='') { this.value='Enter a new question';this.style.color='#ccc' }" /></p>
-                <p>
-                <ul class="question_type">
-                    <li>
-                        <input type="radio" id="newQuestionType-1" name="newQuestionType" checked="checked" value="1" /><label for="newQuestionType-1">Radio</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="newQuestionType-2" name="newQuestionType" value="2" /><label for="newQuestionType-2">Checkbox</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="newQuestionType-3" name="newQuestionType" value="3" /><label for="newQuestionType-3">Text Box</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="newQuestionType-4" name="newQuestionType" value="4" /><label for="newQuestionType-4">Text Area</label>
-                    </li>
-                </ul>
-                </p>
+
+            <p  class="survey" style="line-height:20px; background-color: transparent; margin-top: 30px; padding-bottom: 15px; padding-top: 15px; border-bottom: none;">
+                Results Visibility
+            </p>
+
+            <p style="line-height:0px; background-color: transparent;">
+
+                {% for i, k in survey.RESULTS_CHOICES %}
+                    <p style="line-height:12px; background-color: transparent; font-size: 12px;"><input type="radio" name="resultDisplay" value="{{ i }}" id="option{{ i }}" {% if i == survey.resultDisplay %}checked="checked"{% endif %}/><label for="option{{ i }}">{{ k }}</label></p>
+                {% endfor %}
+
+            </p>
+
+            <p  class="survey" style="line-height:20px; background-color: transparent; margin-top: 30px; padding-bottom: 15px; padding-top: 15px; border-bottom: none;">
+                Survey End Date
+            </p>
+
+            <p style="line-height:0px; background-color: transparent;">
+            <p style="line-height:0px; background-color: transparent;">
+                <input id="id_date" type="text" class="datePicker" name="endtime" value="{% if survey.endtime %}{{ survey.endtime|date:"d/m/Y" }}{% else %}{{ tomorrow|date:"d/m/Y" }}{% endif %}" />
+            </p>
+            </p>
+
+        {% endif %}
+
+
+
+
+        {% if survey.status == survey.STATUS_ACTIVE or survey.status == survey.STATUS_PUBLISHED and survey.owner == user and not survey.owner.is_staff %}
+
+            <p  class="survey" style="line-height:20px; background-color: transparent; margin-top: 30px; padding-bottom: 15px; padding-top: 15px; border-bottom: none;">
+                Survey Controls
+            </p>
+
+            <div class="container">
+                <div class="row">
+                    {% if survey.status == survey.STATUS_ACTIVE %}
+                        <div class="fourcol">
+                            <p  style="line-height:0px; background-color: transparent;">
+                                <input style="padding: 8.5px 32px;" class="submit-button" type="submit" name="publish" value="Publish" />
+                            </p>
+                        </div>
+                        <div class="fourcol">
+                            <p  style="line-height:0px; background-color: transparent;">
+                                <input style="padding: 8.5px 6px;" class="submit-button" name="apply" type="submit" value="Apply Changes" />
+                            </p>
+                        </div>
+                        <div class="fourcol last">
+                            <p style="line-height:0px; background-color: transparent;">
+                                <input style="padding: 8.5px 36px;" class="submit-button" type="reset" value="Reset" />
+                            </p>
+                        </div>
+
+                        <p style="line-height:20px; background-color: transparent; color:#add8e6;  font-size: 9px;">
+                            Hint: You may also use the "Enter" key to apply changes
+                        </p>
+
+                    {% endif %}
+
+                    {% if survey.status == survey.STATUS_PUBLISHED and survey.owner == user and not survey.owner.is_staff %}
+
+                        <div class="twelvecol last">
+                            <p  style="line-height:0px; background-color: transparent;">
+                                <input class="submit-button" name="end" type="submit" value="End Survey" />
+                            </p>
+                        </div>
+
+                    {% endif %}
+
+
+
+                </div>
             </div>
         {% endif %}
-        <div class="buttons">
-            <h2>Controls</h2>
+
+
+
+            <p  class="survey" style="line-height:20px; background-color: transparent; border-bottom: none; padding-top: 15px;">
+                Survey Title
+            </p>
+            <div class="survey" style="border: none;">
+                <p style="line-height:0px; background-color: transparent;">
+                    <input id="id_textbox" type="text" name="surveyTitle" value="{{ survey.title }} " onkeydown="if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }" />
+                </p>
+            </div>
+
+
+            {% for question in survey.question_set.all %}
+                <div class="question">
+                    <p  class="survey" style="line-height:20px; background-color: transparent; border-bottom: none; padding-top: 15px;">
+                        Question {{ forloop.counter }}
+                    </p>
+
+                    <p style="line-height:0px; background-color: transparent; border: none;">
+                        <input id="id_textbox" class="question" name="questionName-{{ question.id }}" type="input" value="{{ question.question }}" onkeydown="if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }" /></p>
+
+                    <div class="container">
+                        <div class="row" style="font-size: 12px;">
+                            <div class="question_type">
+                            <div class="threecol">
+                                <p style="line-height:0px; background-color: transparent;">
+                                    <input type="radio" id="question{{ question.id }}type-1" name="questionType-{{ question.id }}" value="1" {% if question.type == 1 %}checked="checked" {% endif %} onclick="this.form.name = 'apply'; this.form.submit(); return false; "/><label for="question{{ question.id }}type-1">Radio</label>
+
+                                </p>
+                            </div>
+                            <div class="threecol">
+                                <p style="line-height:0px; background-color: transparent;">
+                                    <input type="radio" id="question{{ question.id }}type-2" name="questionType-{{ question.id }}" value="2" {% if question.type == 2 %}checked="checked" {% endif %} onclick="this.form.name = 'apply'; this.form.submit(); return false; "/><label for="question{{ question.id }}type-2">Checkbox</label>
+
+                                </p>
+                            </div>
+                            <div class="threecol">
+                                <p style="line-height:0px; background-color: transparent;">
+                                    <input type="radio" id="question{{ question.id }}type-3" name="questionType-{{ question.id }}" value="3" {% if question.type == 3 %}checked="checked" {% endif %} onclick="this.form.name = 'apply'; this.form.submit(); return false; "/><label for="question{{ question.id }}type-3">Text Box</label>
+
+                                </p>
+                            </div>
+                            <div class="threecol last">
+                                <p style="line-height:0px; background-color: transparent;">
+                                    <input type="radio" id="question{{ question.id }}type-4" name="questionType-{{ question.id }}" value="4" {% if question.type == 4 %}checked="checked" {% endif %} onclick="this.form.name = 'apply'; this.form.submit(); return false; "/><label for="question{{ question.id }}type-4">Text Area</label>
+
+                                </p>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="choices">
+                        <p  class="survey" style="line-height:20px; background-color: transparent; border: none; padding-top: 15px;">
+                            Choices
+                        </p>
+                        {% if question.type == 1 or question.type == 2 %}
+                            {% for choice in question.choice_set.all %}
+                                <p>
+                                    {% autoescape off %}
+                                        {% if question.type == 1 %}
+                                            <p style="line-height:0px; background-color: transparent;">
+
+                                                <input type="radio" name="question{{ question.id }}" onclick="if (this.checked)this.checked=false" /><input class="choice" name="choice-{{ choice.id }}" type="text" value="{{ choice.choice }}" onkeydown="if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }"/>
+                                            </p>
+                                        {% elif question.type == 2 %}
+                                            <p style="line-height:0px; background-color: transparent;">
+
+                                                <input type="checkbox" onclick="if (this.checked)this.checked=false" /><input class="choice" name="choice-{{ choice.id }}" type="text" value="{{ choice.choice }}" onkeydown="if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }"/>
+                                            </p>
+                                        {% endif %}
+                                    {% endautoescape %}
+                                </p>
+                            {% endfor %}
+                            {% if survey.status == survey.STATUS_ACTIVE %}
+                                <div id="newChoices-{{ question.id }}">
+                                    <p style="line-height:0px; background-color: transparent;">
+
+                                        <input type="{% if question.type == 1 %}radio{% elif question.type == 2 %}checkbox{% endif %}" onclick="if (this.checked)this.checked=false" /><input  class="choice new" name="newChoice1-{{ question.id }}" type="text" value="Add new choice" onkeydown="if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }"/>
+                                    </p>
+                                </div>
+                            {% endif %}
+                        {% elif question.type == 3 %}
+                            <p style="line-height:0px; background-color: transparent;">
+
+                                <input id="id_textbox" class="text" type="text" value="Text is entered here"  />
+                            </p>
+                        {% elif question.type == 4 %}
+                            <p style="line-height:0px; background-color: transparent;">
+                                <textarea  id="id_textbox" class="text" type="text" >Text is entered here&#10;&#10;&#10;&#10;Multiple lines are supported</textarea>
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
             {% if survey.status == survey.STATUS_ACTIVE %}
-                <input class="submit" name="apply" type="submit" value="Apply Changes" /><input class="reset" type="reset" value="Reset" />
-                <p class="hint">Hint: You may also use the "Enter" key to apply changes</p>
+                <div class="question">
+                    <p  class="survey" style="line-height:20px; background-color: transparent; border-bottom: none; padding-top: 15px; color: #4a4a4a;">
+                        New Question
+                    </p>
+                    <p style="line-height:0px; background-color: transparent;">
+
+                        <input id="id_textbox" style="background-color: #282828; color: #FFF;" class="question new" name="newQuestion" type="input" value="Enter a new question" onfocus="if (this.value == 'Enter a new question')this.value='';this.style.color='#0e5c28'" onblur="if(this.value=='') { this.value='Enter a new question';this.style.color='#ccc' }" onkeydown="if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }"/>
+                    </p>
+
+                    <div class="container">
+                        <div class="row" style="font-size: 12px;">
+                            <div class="question_type">
+                                <div class="threecol">
+                                    <p style="line-height:0px; background-color: transparent; color: #4a4a4a;">
+                                        <input type="radio" id="newQuestionType-1" name="newQuestionType" checked="checked" value="1" onclick="this.form.name = 'apply'; this.form.submit(); return false; "/><label for="newQuestionType-1">Radio</label>
+
+                                    </p>
+                                </div>
+                                <div class="threecol">
+                                    <p style="line-height:0px; background-color: transparent; color: #4a4a4a;">
+                                        <input type="radio" id="newQuestionType-2" name="newQuestionType" value="2" onclick="this.form.name = 'apply'; this.form.submit(); return false; " /><label for="newQuestionType-2">Checkbox</label>
+
+                                    </p>
+                                </div>
+                                <div class="threecol">
+                                    <p style="line-height:0px; background-color: transparent; color: #4a4a4a;">
+                                        <input type="radio" id="newQuestionType-3" name="newQuestionType" value="3" onclick="this.form.name = 'apply'; this.form.submit(); return false; " /><label for="newQuestionType-3">Text Box</label>
+
+                                    </p>
+                                </div>
+                                <div class="threecol last">
+                                    <p style="line-height:0px; background-color: transparent; color: #4a4a4a;">
+                                        <input type="radio" id="newQuestionType-4" name="newQuestionType" value="4" onclick="this.form.name = 'apply'; this.form.submit(); return false; "/><label for="newQuestionType-4">Text Area</label>
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             {% endif %}
-            {% if survey.status == survey.STATUS_PUBLISHED %}
-                <p class="button results"><a href="{% url surveys.views.results survey_id=survey.id %}">View Results</a></p>
-                {% if survey.owner == request.user %}
-                    <input class="end" name="end" type="submit" value="End Survey" />
-                {% endif %}
-                <p class="button"><a href="{% if survey.status == survey.STATUS_PUBLISHED %}{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}{% else %}{% url surveys.views.index %}{% endif %}">Done Editing</a></p>
-            {% endif %}
-            {% if survey.status == survey.STATUS_ACTIVE %}
-                <h2>Survey Settings</h2>
-                <p>Results shown to:</p>
-                {% for i, k in survey.RESULTS_CHOICES %}
-                    <p class="resultDisplay"><input type="radio" name="resultDisplay" value="{{ i }}" id="option{{ i }}" {% if i == survey.resultDisplay %}checked="checked"{% endif %}/><label for="option{{ i }}">{{ k }}</label></p>
-                {% endfor %}
-                <p>End date: <input type="text" class="datePicker" name="endtime" value="{% if survey.endtime %}{{ survey.endtime|date:"d/m/Y" }}{% else %}{{ tomorrow|date:"d/m/Y" }}{% endif %}" /></p>
-                <p><input type="submit" name="publish" value="Publish" /></p>
-            {% endif %}
-            {% if user.is_superuser %}
-                <h2>Superuser Stuff</h2>
-                <ul class="menu">
-                {% if survey.status == survey.STATUS_PUBLISHED %}
-                    <li><input class="button" name="unpublish" type="submit" value="Unpublish Survey" /></li>
-                    <li><input class="button" name="end" type="submit" value="End Survey" /></li>
-                {% endif %}
-                    <li><input class="button" name="{% if survey.status == survey.STATUS_INACTIVE %}un{% endif %}delete" type="submit" value="{% if survey.status == survey.STATUS_INACTIVE %}Undelete{% else %}Delete{% endif %} Survey" /></li>
-                    <li><input class="button" name="ban" type="submit" value="Ban {{ survey.owner }}" /></li>
-                    <li><p class="button"><a href="{% url surveys.views.index %}">Done</a></p></li>
-                </ul>
-            {% endif %}
-        </div>
-    </form>
-    {% if survey.status != survey.STATUS_ACTIVE %}
-        <script>
-            $(".survey :input").attr("disabled", true);
-            $(".question :input").attr("disabled", true);
-        </script>
+
+        </form>
+        {% if survey.status != survey.STATUS_ACTIVE %}
+            <script>
+                $(".survey :input").attr("disabled", true);
+                $(".question :input").attr("disabled", true);
+            </script>
+        {% endif %}
+    {% else %}
+
+        <p style="line-height:0px; background-color: transparent;">
+            You cannot edit someone else's survey.
+        </p>
+
     {% endif %}
-{% else %}
-    <div class="surveyinfo">
-        <p>You cannot edit someone else's survey.</p>
+
+
+
     </div>
-{% endif %}
-</body>
-</html>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+
+{% endblock %}

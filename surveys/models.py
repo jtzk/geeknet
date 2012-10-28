@@ -1,4 +1,5 @@
 import datetime
+import socket
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.contrib.auth.models import User
@@ -12,8 +13,8 @@ class Survey(models.Model):
     STATUS_ENDED = 3
 
     STATUS_CHOICES = (
-        (STATUS_INACTIVE, 'Inactive'),
-        (STATUS_ACTIVE, 'Active'),
+        (STATUS_INACTIVE, 'Deleted'),
+        (STATUS_ACTIVE, 'Unpublished'),
         (STATUS_PUBLISHED, 'Published'),
         (STATUS_ENDED, 'Ended'),
         )
@@ -71,8 +72,7 @@ class Survey(models.Model):
 
             results["longest"] = timedelta_to_time(longestDuration)
             results["shortest"] = timedelta_to_time(shortestDuration)
-            results["average"] = timedelta_to_time(longestDuration/self.surveyee_set.all().count())
-
+            results["average"] = timedelta_to_time(totalDuration/self.surveyee_set.all().count())
         return results
 
     def publish(self, resultDisplay=RESULTS_PUBLIC, endtime=datetime.date.today()+datetime.timedelta(days=3)):
