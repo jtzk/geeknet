@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 
+{% load humanize %}
+
 {% block extrahead %}
 
     <style type="text/css" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
            xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 
-        .endcontainer {
+
+        .survey-container {
             border: 2px solid #2f2f2f;
             -webkit-border-radius: 19px;
             -moz-border-radius: 19px;
@@ -17,17 +20,51 @@
             padding-bottom:20px;
         }
 
+        #survey-row
+        {
+            line-height: 20px;
+            background-color: #1e1e1e;
+        }
+
         .survey
         {
             color: #cbcbcb;
             font-weight: bold;
             text-decoration: none;
-            text-align: center;
-            width: 100%;
-            padding-bottom: 5px;;
-            border-top: 1px dashed #DD0000;
+            margin-right: 10px;
             border-bottom: 1px dashed #DD0000;
-            line-height: 15px;
+        }
+
+        .surveydetails
+        {
+            color: #cbcbcb;
+            background-color: #202020;
+            float: none;
+            list-style-type:none;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            text-shadow: #404040 0 1px 0;
+        }
+
+        #id_title {
+            border: 1px solid #3b3b3b;
+            background: #ffffff;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            color: #000000;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+            padding: 2px;;
+            width:80%;
+            max-width: 200px;
+            text-align: center;
+        }
+        #id_title:focus {
+            background: #000000;
+            color: #55e34d;
         }
 
         .form-title {
@@ -54,8 +91,8 @@
             text-shadow: #addc7e 0 1px 0;
             color: #31540c;
             font-family: helvetica, serif;
-            padding: 8.5px 36px;
-            font-size: 14px;
+            padding: 3px 10px;
+            font-size: 12px;
             text-decoration: none;
             vertical-align: middle;
         }
@@ -84,18 +121,14 @@
             color: #fff;
         }
 
-        .errorlist
-        {
-            color: red;
-            float: none;
-            list-style-type:none;
-            width: 100%;
-            text-align: center;
+        @media handheld, only screen and (max-width: 767px) {
+
         }
 
     </style>
 
 {% endblock %}
+
 
 {% block content %}
 
@@ -123,19 +156,39 @@
                 </div>
             </div>
 
+            <div class="container">
+                <div class="row">
+                    <div class="twelvecol last">
+                        <p style="line-height:0; margin-top: 0px; background-color: transparent;">
+                            <a href='/about' ><img src="/static/media/aboutButtonOn.png"></a>
+                            <a href='/contact'><img src="/static/media/contactButton.png"></a>
+                            {% if user.is_authenticated %}
+                                <a href='/accounts/profile'><img src="/static/media/profileButton.png"></a>
+                                <a href='/surveys/create'><img src="/static/media/createButton.png"></a>
+                                {% if user.is_staff %}
+                                    <a href='/admin'><img src="/static/media/adminButton.png"></a>
+                                {% endif %}
+                                <a href='/accounts/logout'><img src="/static/media/logoutButton.png"></a>
+                            {% else %}
+                                <a href='/accounts/login/' ><img src="/static/media/loginButton.png"></a>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
 
             <div class="container">
                 <div class="row">
                     <div class="twelvecol last">
-                        <div class="endcontainer">
-
-                            <p style="line-height:20px; background-color: transparent;">
-                                You are not allowed to view the results of this survey.
-                            </p>
-                            <p style="line-height:20px; background-color: transparent;">
-                                <a href="{% url surveys.views.index %}">Back to index</a>
+                        <div class="survey-container">
+                            <p style="line-height:0px; background-color: transparent;">
+                                <img src="/static/media/geeknet.png">
                             </p>
 
+                            <p style="line-height:20px; background-color: transparent; text-align: justify; margin-left: 20px; margin-right: 20px; font-size: 12px;">
+                                iNTUSurvey is a lightweight web survey service developed by a team of NTU undergraduates. The website serves as a graded project for the Software Engineering module [Code CZ2006] under the team GeekNET.
+                                The project was completed within a time frame of 10 weeks. This involved the documentation of system requirements, modeling classes and sequence diagrams, implementation of coding ,and testing. The core technologies involved are HTML programming and Django Web Framework.
+                            </p>
 
                         </div>
                     </div>
@@ -143,10 +196,6 @@
             </div>
 
         </div>
-
     </div>
 
-
-
 {% endblock %}
-

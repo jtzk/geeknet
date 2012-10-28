@@ -119,6 +119,29 @@
             color: #fff;
         }
 
+        .progressbar {
+            margin-top: 10px;
+            min-width: 60px;
+            max-width: 300px;
+            margin-left: 0px;
+            background: url('/static/images/progressbar.png') no-repeat 0 -40px;
+        }
+        .progressbar-completed {
+
+            height: 20px;
+            margin-left: -1px;
+            background: url('/static/images/progressbar.png') no-repeat 1px 0;
+        }
+        .progressbar-completed div {
+            float: right;
+            width: 100%;
+            text-align: center;
+            height: 20px;
+            margin-right: -1px;
+            background: url('/static/images/progressbar.png') no-repeat 100% 0;
+            display: inline; /* IE 6 double float bug */
+        }
+
         @media handheld, only screen and (max-width: 767px) {
 
         }
@@ -165,41 +188,55 @@
                                 {{ survey.title }}
                             </p>
 
-                            <p style="line-height:20px; background-color: transparent;">
+                            <p style="line-height:20px; background-color: transparent; float: left; margin-left: 5px;">
                                 Q{{ question.number }}. {{ question.question }}
                             </p>
 
-                            <p style="background-color: transparent;;">
+                            <p style="background-color: transparent;">
 
                             <form action="{% url surveys.views.vote survey_id=survey.id %}" method="post" style="color:red;">
                                 {% csrf_token %}
 
                                     {% if question.type == question.TYPE_RADIO or question.type == question.TYPE_CHECKBOX %}
                                         {% for choice in question.choice_set.all %}
-                                            <p style="line-height:0px; background-color: transparent;">
+                                            <p style="line-height:20px; background-color: transparent;  float: left; clear: both; margin-left: 10px;">
                                                 <input type="{% if question.type == question.TYPE_RADIO %}radio{% elif question.type == question.TYPE_CHECKBOX %}checkbox{% endif %}" name="question-{{ question.id }}" id="choice{{ choice.id }}" value="{{ choice.id }}" />
                                                 <label for="choice{{ choice.id }}">{{ choice.choice }}</label><br />
                                             </p>
                                         {% endfor %}
                                     {% elif question.type == question.TYPE_TEXTBOX %}
-                                        <p style="line-height:0px; background-color: transparent;">
+                                        <p style="line-height:0px; background-color: transparent; clear: both; padding-top: 5px;">
                                             <input id="id_textbox" type="text" name="question-{{ question.id }}" value="" /><br />
                                         </p>
 
                                     {% elif question.type == question.TYPE_TEXTAREA %}
-                                        <p style="line-height:0px; background-color: transparent;">
-                                            <textarea id="id_textarea" style="width:400px;height:200px" name="question-{{ question.id }}"></textarea><br />
+                                        <p style="line-height:0px; background-color: transparent; clear: both; padding-top: 5px;">
+                                            <textarea id="id_textarea" style="min-width:100px; max-width: 400px;height:200px" name="question-{{ question.id }}"></textarea><br />
                                         </p>
                                     {% endif %}
 
 
-                                <p style="line-height:0px; background-color: transparent;">
+                                <p style="line-height:0px; background-color: transparent; clear: both; padding-top: 10px;">
                                     <input class="submit-button" type="submit" value="Answer" />
                                 </p>
 
-                                <p style="line-height:16px; background-color: transparent;">
-                                    Survey Completion:{{ question.number }} / {{ survey.question_set.count }}
+                                <p style="line-height:16px; background-color: transparent; float: left; margin-left: 5px; font-size: 12px; ">
+                                    Survey Progress:
                                 </p>
+
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="twelvecol last">
+                                            <div class="progressbar">
+                                                <div class="progressbar-completed" style="width:{{ progress }}%;">
+                                                    <div><span style="text-shadow: #b8b8b8 1px 0; color: #444444; font-size: 12px; ">{% if progress == 100 %}Last Question{% else %}{{ progress }}%{% endif %}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
 
 
                             {% if question.next %}

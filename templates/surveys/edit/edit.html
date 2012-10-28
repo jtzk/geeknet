@@ -16,17 +16,17 @@
             $(document).on("focus", ".new" && ".choice", function() {
                 if (this.value == 'Add new choice')
                     this.value='';
-                this.style.color='#000';
+                this.style.color='#5b5b5b';
                 if($(this).parent().is(':last-child')) {
                     questionNo = $(this).attr('name').split("-")[1];
                     newId = "newChoice" + ($( "#newChoices-" + questionNo + " p" ).length+1) + "-" + questionNo;
-                    $( "#newChoices-" + questionNo ).append("<p style=\"line-height:0px; background-color: transparent;\"> <input type=\"radio\" onclick=\"if (this.checked)this.checked=false\" /><input class=\"choice new\" name=\"" + newId + "\" type=\"text\" value=\"Add new choice\" onkeydown=\"if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }\"/></p>");
+                    $( "#newChoices-" + questionNo ).append("<p style=\"line-height:0px; background-color: transparent;\"> <input type=\"radio\" onclick=\"if (this.checked)this.checked=false\" /><input style= \"color: #5b5b5b\" class=\"choice new\" name=\"" + newId + "\" type=\"text\" value=\"Add new choice\" onkeydown=\"if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }\"/></p>");
                 }
             });
             $(document).on("blur", ".new" && ".choice", function() {
                 if(this.value=='') {
                     this.value='Add new choice';
-                    this.style.color='#ccc';
+                    this.style.color='#5b5b5b';
                 }
             });
             // end
@@ -484,7 +484,7 @@
                                 <div id="newChoices-{{ question.id }}">
                                     <p style="line-height:0px; background-color: transparent;">
 
-                                        <input type="{% if question.type == 1 %}radio{% elif question.type == 2 %}checkbox{% endif %}" onclick="if (this.checked)this.checked=false" /><input  class="choice new" name="newChoice1-{{ question.id }}" type="text" value="Add new choice" onkeydown="if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }"/>
+                                        <input type="{% if question.type == 1 %}radio{% elif question.type == 2 %}checkbox{% endif %}" onclick="if (this.checked)this.checked=false" /><input  style="color: #5b5b5b;" class="choice new" name="newChoice1-{{ question.id }}" type="text" value="Add new choice" onkeydown="if (event.keyCode == 13) { this.form.name = 'apply'; this.form.submit(); return false; }"/>
                                     </p>
                                 </div>
                             {% endif %}

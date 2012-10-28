@@ -1,51 +1,323 @@
+{% extends "base.html" %}
+
 {% load humanize %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Survey Results - {{ survey.title }}</title>
-    <style type="text/css">
-        * { font-family:Verdana, Tahoma; font-size:12px }
-        h2 { margin-top:30px }
-        div.question { margin:0 15px }
-        div.question p { margin-bottom:5px }
+
+{% block extrahead %}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1.0', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.setOnLoadCallback(drawChart);
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+            var options = {
+                'width':400,
+                'height':300,
+                'backgroundColor': 'transparent',
+                'legend': {textStyle: {color: 'white'}},
+                'hAxis':  {textStyle: {color: 'white'}},
+                'vAxis':  {textStyle: {color: 'white'}}
+            };
+
+
+        {% for question in survey.question_set.all %}
+
+                {% if question.type == question.TYPE_RADIO or question.type == question.TYPE_CHECKBOX %}
+
+                    var data{{ forloop.counter }} = new google.visualization.DataTable();
+                    data{{ forloop.counter }}.addColumn('string', 'Choices');
+                    data{{ forloop.counter }}.addColumn('number', 'Ans');
+                    data{{ forloop.counter }}.addRows([
+
+                        {% for choice in question.choice_set.all %}
+                           ['{{ choice.choice }}', {{ choice.votes }}],
+                        {% endfor %}
+
+                    ]);
+
+                    var chart{{ forloop.counter }} = new google.visualization.{% if view_id == 1 %}Bar{% else %}Pie{% endif %}Chart (document.getElementById('chart_div{{ forloop.counter }}'));
+                    chart{{ forloop.counter }}.draw(data{{ forloop.counter }}, options);
+
+                {% endif %}
+        {% endfor %}
+
+        }
+    </script>
+
+
+    <style type="text/css" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+        .survey-container {
+            border: 2px solid #2f2f2f;
+            -webkit-border-radius: 19px;
+            -moz-border-radius: 19px;
+            border-radius: 19px;
+            -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+            text-decoration: none;
+            padding-bottom:20px;
+        }
+
+        #survey-row
+        {
+            line-height: 20px;
+            background-color: #1e1e1e;
+        }
+
+        .survey
+        {
+            color: #cbcbcb;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            padding-bottom: 5px;;
+            border-top: 1px dashed #DD0000;
+            border-bottom: 1px dashed #DD0000;
+            line-height: 15px;
+        }
+
+        .surveydetails
+        {
+            color: #cbcbcb;
+            float: none;
+            width: 100%;
+            text-align: center;
+            list-style-type: none;
+            font-size: 12px;
+            text-shadow: #404040 0 1px 0;
+        }
+
+
+
+        .submit-button {
+            border: 1px solid #447314;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+            text-shadow: #addc7e 0 1px 0;
+            color: #31540c;
+            font-family: helvetica, serif;
+            padding: 8.5px 30px;
+            font-size: 14px;
+            text-decoration: none;
+            vertical-align: middle;
+        }
+        .submit-button:hover {
+            border: 1px solid #447314;
+            text-shadow: #31540c 0 1px 0;
+            background: #6aa436;
+            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);
+            color: #fff;
+        }
+        .submit-button:active {
+            text-shadow: #31540c 0 1px 0;
+            border: 1px solid #447314;
+            background: #8dc059;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6aa436), to(#6aa436));
+            background: -webkit-linear-gradient(top, #6aa436, #8dc059);
+            background: -moz-linear-gradient(top, #6aa436, #8dc059);
+            background: -ms-linear-gradient(top, #6aa436, #8dc059);
+            background: -o-linear-gradient(top, #6aa436, #8dc059);
+            background-image: -ms-linear-gradient(top, #6aa436 0%, #8dc059 100%);
+            color: #fff;
+        }
+
+
+
+        @media handheld, only screen and (max-width: 767px) {
+
+        }
+
     </style>
-</head>
-<body>
-<h1>{{ survey.title }}</h1>
-<h3>{{ survey.resultDisplay }}</h3>
-<h3>{{ survey.owner.username }}</h3>
-<h3>{{ survey.information }}</h3>
+
+{% endblock %}
 
 
-<ul>
-    <h2>Statistics</h2>
-    <p>Number of questions: <strong>{{ statistics.numberQuestions }}</strong></p>
-    <p>Participants: <strong>{{ statistics.participants }}</strong></p>
+{% block content %}
 
-    <p>IP List:</p>
-    <ul>
-        {% for surveyee in survey.surveyee_set.all %}
-            <li><p>{{ surveyee.ip }}: {{ surveyee.user.get_full_name }} ({{ surveyee.user.username }})</p></li>        {% endfor %}
-    </ul>
+    <div id="wrap">
+
+    <div id="main">
+
+    <div class="container">
+        <div class="row">
+            <div class="sixcol">
+                <p class="logo" style="line-height:0; background-color: transparent;">
+                    <a href='/'><img src="/static/media/logo.png"></a>
+                </p>
+            </div>
+
+            <div class="sixcol last">
+                <p class="login" style="background-color: transparent;">
+                    {% if user.is_authenticated %}
+                        Welcome, {{ user.username }}.
+                    {% else %}
+                        Hello, Guest.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+    <div class="row">
+    <div class="twelvecol last">
+    <div class="survey-container">
 
 
-    <p>Shortest time taken: <strong>{{ statistics.shortest }}</strong></p>
-    <p>Longest time taken: <strong>{{ statistics.longest }}</strong></p>
-    <p>Average time taken: <strong>{{ statistics.average }}</strong></p>
-    {% for question in survey.question_set.all %}
-        <h2>{{ question.question }}</h2>
-        {% if question.type == question.TYPE_RADIO or question.type == question.TYPE_CHECKBOX %}
-            {% for choice in question.choice_set.all %}
-                <div class="question"><p style="width:300px">{{ choice.choice }}<span style="float:right;"><strong>{{ choice.votes }} vote{{ choice.votes|pluralize }}</strong></span></p><div style="background:#999; width:300px; padding:0"><p style="padding:2px 3px; text-align:right; background:#333; color:#fff; font:10px Verdana; margin:0; width:{{ choice.percentage }}%">{{ choice.percentage }}%</p></div></div>
+    <p style="line-height:0px; background-color: transparent;">
+        <img src="/static/media/resultHead.png">
+    </p>
+
+    <p class="survey" style="line-height:20px; background-color: transparent; border-top: none;">
+        {{ survey.title }}
+    </p>
+
+        <p style="line-height:0px; background-color: transparent;">
+
+        <ul class="surveydetails">
+            <li>Survey creator: <b>{{ survey.owner }}</b></li>
+            <li>Number of questions: <b>{{ statistics.numberQuestions }}</b></li>
+            <li>Number of Participants: <b>{{ statistics.participants }}</b></li>
+            <li>Shortest Time Completion: <b>{{ statistics.shortest }}</b></li>
+            <li>Longest Time Completion: <b>{{ statistics.longest }}</b></li>
+            <li>Average Time Completion: <b>{{ statistics.average }}</b></li>
+        </ul>
+        </p>
+
+        <div class="container">
+            <div class="row">
+                {% if survey.owner == user or user.is_staff %}
+
+                    <div class="threecol">
+                        <p style="margin-top: 0px; background-color: transparent;  line-height: 15px;">
+                            <a href="/surveys/{{ survey.id }}/results/?ip=1" style="text-decoration: none;"><img src="/static/media/viewip{% if show_ip == 1 %}On{% endif %}.png"></a>
+                        </p>
+                    </div>
+                {% endif %}
+
+                <div class="{% if survey.owner == user or user.is_staff %}twocol{% else %}threecol{% endif %}">
+                    <p style="margin-top: 0px; background-color: transparent;  line-height: 15px;">
+                        <a href="/surveys/{{ survey.id }}/results/" style="text-decoration: none;"><img src="/static/media/textual{% if view_id != 1 and view_id != 2 %}On{% endif %}.png"></a>
+                    </p>
+                </div>
+
+                <div class="{% if survey.owner == user or user.is_staff %}twocol{% else %}threecol{% endif %}">
+                    <p style="margin-top: 0px; background-color: transparent;  line-height: 15px;">
+                        <a href="/surveys/{{ survey.id }}/results/?view=1" style="text-decoration: none;"><img src="/static/media/barChart{% if view_id == 1 %}On{% endif %}.png"></a>
+                    </p>
+                </div>
+
+                <div class="{% if survey.owner == user or user.is_staff %}twocol{% else %}threecol{% endif %}">
+                    <p style="margin-top: 0px; background-color: transparent;  line-height: 15px;">
+                        <a href="/surveys/{{ survey.id }}/results/?view=2" style="text-decoration: none;"><img src="/static/media/pieChart{% if  view_id == 2 %}On{% endif %}.png"></a>
+                    </p>
+                </div>
+
+                <div class="{% if survey.owner == user or user.is_staff %}threecol{% else %}threecol{% endif %} last">
+                    <p style="margin-top: 0px; background-color: transparent;  line-height: 15px; ">
+                        <a href="{% if survey.status == survey.STATUS_PUBLISHED %}{% url surveys.views.detail survey_id=survey.id slug=survey.slug %}{% else %}{% url surveys.views.index %}{% endif %}" style=" text-decoration: none;"><img src="/static/media/done.png"></a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        {% if show_ip == 1 %}
+
+            <p  class="survey" style="line-height:20px; background-color: transparent; margin-top: 30px; padding-bottom: 15px; padding-top: 15px; border-bottom: none;">
+                IP Addresses
+            </p>
+
+            {% for surveyee in survey.surveyee_set.all %}
+                <p class="surveydetails" style="line-height:20px;">
+                    {{ surveyee.ip }}: {{ surveyee.user.get_full_name }} ({{ surveyee.user.username }})
+                </p>
             {% endfor %}
-        {% elif question.type == question.TYPE_TEXTBOX or question.type == question.TYPE_TEXTAREA %}
-            {% for answer in question.answer_set.all %}
-                <div class="question"><p>{{ answer.value }}</p></div>
-            {% endfor %}
+
+
+
         {% endif %}
-    {% endfor %}
-</ul>
 
-<a href="{% url surveys.views.index %}">Back to survey list</a>
-</body>
-</html>
+
+        {% for question in survey.question_set.all %}
+            <p  class="survey" style="line-height:20px; background-color: transparent; margin-top: 30px; padding-bottom: 15px; padding-top: 15px; border-bottom: none;">
+                Q{{ forloop.counter }}. {{ question.question }}
+            </p>
+
+
+            {% if question.type == question.TYPE_RADIO or question.type == question.TYPE_CHECKBOX %}
+
+                <p id="survey-row" style="line-height:15px; font-size: 12px; ">
+                    Number of Choices: {{ question.choice_set.count }}<br/>
+                    Answer Type: {% if question.type == 1 %}Single Selection{% elif question.type == 2 %}Multiple Selections{% elif question.type == 3 %}Single-line Text{% else %}Multi-line Text{% endif %}
+                </p>
+
+                {% if view_id == 1 or view_id == 2%}
+                    <div id="chart_div{{ forloop.counter }}" ></div>
+                {% else %}
+                    {% for choice in question.choice_set.all %}
+                        <p class="surveydetails" style="line-height:20px;">The choice [{{ choice.choice }}] has <b>{{ choice.votes }}</b> selection{{ choice.votes|pluralize }}. It is {{ choice.percentage }}% of all the selections.</p>
+                    {% endfor %}
+                {% endif %}
+
+
+            {% elif question.type == question.TYPE_TEXTBOX or question.type == question.TYPE_TEXTAREA %}
+                <p id="survey-row" style="line-height:15px; font-size: 12px; ">
+                    Number of Participation: {{ question.answer_set.count }}<br/>
+                    Answer Type: {% if question.type == 1 %}Single Selection{% elif question.type == 2 %}Multiple Selections{% elif question.type == 3 %}Single-line Text{% else %}Multi-line Text{% endif %}
+                </p>
+
+                {% for answer in question.answer_set.all %}
+                    <p class="surveydetails" style="line-height:20px;">{{ answer.value }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+
+
+
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+
+{% endblock %}
+
+
+
+
+

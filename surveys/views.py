@@ -158,16 +158,30 @@ def question(request, survey_id, question_id):
                 else:
                     q.number += 1
 
-            return render_to_response('surveys/question.html', {'survey': s, 'question': q}, context_instance=RequestContext(request))
+            progress = 100 * q.number / s.numQuestions
+
+            return render_to_response('surveys/question.html', {'survey': s, 'question': q , 'progress': progress}, context_instance=RequestContext(request))
 
     return HttpResponseRedirect(reverse('surveys.views.detail', args=(s.id, s.slug)))
 
 def results(request, survey_id):
+
+    view_id = 0;
+    show_ip = 0;
+
+    if request.GET.get('view') != None:
+        if request.GET.get('view').isdigit():
+            view_id = int(request.GET.get('view'))
+
+    if request.GET.get('ip') != None:
+        if request.GET.get('ip').isdigit():
+            show_ip = int(request.GET.get('ip'))
+
     s = get_object_or_404(Survey, pk=survey_id)
     if not s.status == s.STATUS_ACTIVE and not s.status == s.STATUS_INACTIVE:
-        if request.user.is_staff or request.user.is_staff or s.resultDisplay == s.RESULTS_PUBLIC or (s.resultDisplay == s.RESULTS_USER and request.user.is_authenticated()) or (s.resultDisplay == s.RESULTS_PRIVATE and request.user == s.owner):
+        if request.user.is_staff or s.resultDisplay == s.RESULTS_PUBLIC or (s.resultDisplay == s.RESULTS_USER and request.user.is_authenticated()) or (s.resultDisplay == s.RESULTS_PRIVATE and request.user == s.owner):
             statistics = s.results()
-            return render_to_response('surveys/results/results.html', {'survey': s, 'statistics': statistics,}, RequestContext(request))
+            return render_to_response('surveys/results/results.html', {'survey': s, 'statistics': statistics, 'view_id': view_id, 'show_ip': show_ip}, RequestContext(request))
         else:
             return render_to_response('surveys/results/error.html', {'survey': s,})
 
@@ -226,6 +240,7 @@ def edit(request, survey_id):
         if request.method == "POST":
             # editing is only allowed when survey status is 'ACTIVE'
             if s.status == s.STATUS_ACTIVE:
+                errors = {}
                 for k, v in request.POST.items():
                     if k.startswith("surveyTitle"):
                         s.title = v
@@ -267,8 +282,11 @@ def edit(request, survey_id):
                             q.type = 1
                         q.save()
                 if 'publish' in request.POST:
+                    if s.question_set.all().count() == 0:
+                        errors['publishError'] = "You cannot publish an empty survey. Create some questions first."
+                        return render_to_response('surveys/edit/edit.html', {'survey': s, 'today':datetime.datetime.now(), 'tomorrow': datetime.datetime.now() + datetime.timedelta(days=1), 'errors': errors}, context_instance=RequestContext(request))
                     if 'resultDisplay' in request.POST and 'endtime' in request.POST:
-                        if not s.publish(resultDisplay=request.POST["resultDisplay"], endtime=dateutil.parser.parse(request.POST["endtime"])):
+                        if not s.publish(resultDisplay=request.POST["resultDisplay"], endtime=dateutil.parser.parse(request.POST["endtime"], dayfirst=True)):
                             return HttpResponseRedirect(reverse('surveys.views.edit', args=(s.id,)))
             # actions for published surveys
             elif s.status == s.STATUS_PUBLISHED:

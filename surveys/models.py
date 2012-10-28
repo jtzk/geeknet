@@ -1,9 +1,8 @@
 import datetime
-import socket
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Max
+from django.utils import timezone
 
 class Survey(models.Model):
     # status types
