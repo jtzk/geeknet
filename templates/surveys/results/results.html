@@ -28,6 +28,12 @@
             };
 
 
+            var isMSIE = /*@cc_on!@*/0;
+
+            if (isMSIE) {
+                options['backgroundColor'] = 'black';
+            }
+
         {% for question in survey.question_set.all %}
 
                 {% if question.type == question.TYPE_RADIO or question.type == question.TYPE_CHECKBOX %}
@@ -38,7 +44,7 @@
                     data{{ forloop.counter }}.addRows([
 
                         {% for choice in question.choice_set.all %}
-                           ['{{ choice.choice }}', {{ choice.votes }}],
+                           ['{{ choice.choice }}', {{ choice.votes }}]{% if not forloop.last %},{% endif %}
                         {% endfor %}
 
                     ]);
