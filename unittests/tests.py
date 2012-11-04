@@ -59,8 +59,6 @@ class IndexTest(TestCase):
         self.assertIsInstance(testAnswer, Answer)
 
 
-
-
         # Tests for different views
         # /?view=1 corresponds to viewing "newest" surveys
         response = self.c.get('/?view=1')

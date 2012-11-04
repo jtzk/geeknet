@@ -131,8 +131,6 @@ INSTALLED_APPS = (
     'surveys',
     'accounts',
     'unittests',
-
-
 )
 
 # A sample logging configuration. The only tangible logging
